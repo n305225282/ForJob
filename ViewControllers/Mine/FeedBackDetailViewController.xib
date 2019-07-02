@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FeedBackDetailViewController">
+            <connections>
+                <outlet property="addPicButton" destination="d4g-P4-TGE" id="53J-86-Y3o"/>
+                <outlet property="feedBackTextView" destination="0VY-8h-9Qn" id="vJ3-Bb-IIp"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="0VY-8h-9Qn" customClass="FSTextView">
+                    <rect key="frame" x="20" y="40" width="345" height="267"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                </textView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d4g-P4-TGE">
+                    <rect key="frame" x="20" y="317" width="80" height="80"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="80" id="1JO-hi-ae4"/>
+                        <constraint firstAttribute="width" constant="80" id="lX2-XH-TbJ"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" weight="thin" pointSize="50"/>
+                    <state key="normal" title="+">
+                        <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="5"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PRV-8k-wFi">
+                    <rect key="frame" x="20" y="417" width="335" height="1"/>
+                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="5wl-Jy-Ky9"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ca2-H4-ygr">
+                    <rect key="frame" x="20" y="438" width="335" height="44"/>
+                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="QrZ-jm-AfL"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                    <state key="normal" title="提交">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="submitAction:" destination="-1" eventType="touchUpInside" id="Hxs-LY-Cic"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="0VY-8h-9Qn" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="20" id="1oU-81-ZtZ"/>
+                <constraint firstItem="d4g-P4-TGE" firstAttribute="top" secondItem="0VY-8h-9Qn" secondAttribute="bottom" constant="10" id="1sZ-3v-sVk"/>
+                <constraint firstItem="PRV-8k-wFi" firstAttribute="top" secondItem="d4g-P4-TGE" secondAttribute="bottom" constant="20" id="7tq-Nu-GqW"/>
+                <constraint firstItem="d4g-P4-TGE" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="20" id="AXc-eu-naX"/>
+                <constraint firstItem="ca2-H4-ygr" firstAttribute="top" secondItem="PRV-8k-wFi" secondAttribute="bottom" constant="20" id="EPg-h7-Ap6"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="ca2-H4-ygr" secondAttribute="trailing" constant="20" id="Fuw-07-zXL"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="PRV-8k-wFi" secondAttribute="trailing" constant="20" id="KVX-J8-vYM"/>
+                <constraint firstItem="ca2-H4-ygr" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="20" id="PWD-TO-5kZ"/>
+                <constraint firstItem="0VY-8h-9Qn" firstAttribute="top" secondItem="Q5M-cg-NOt" secondAttribute="top" constant="20" id="Q0i-0E-tkC"/>
+                <constraint firstItem="Q5M-cg-NOt" firstAttribute="trailing" secondItem="0VY-8h-9Qn" secondAttribute="trailing" constant="10" id="UB3-JL-ITq"/>
+                <constraint firstItem="0VY-8h-9Qn" firstAttribute="height" secondItem="i5M-Pr-FkT" secondAttribute="height" multiplier="0.8/2" id="f9B-yg-5Eo"/>
+                <constraint firstItem="PRV-8k-wFi" firstAttribute="leading" secondItem="Q5M-cg-NOt" secondAttribute="leading" constant="20" id="gp5-eC-BI5"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="Q5M-cg-NOt"/>
+        </view>
+    </objects>
+</document>
