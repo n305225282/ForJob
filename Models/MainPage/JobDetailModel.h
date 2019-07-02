@@ -15,9 +15,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString * company_name;
 @property (nonatomic, strong) NSString * manage_name;
 @property (nonatomic, strong) NSString * mobile;
-@property (nonatomic, strong) NSString * obj_remark;
+@property (nonatomic, strong) NSString * post_detail;
 @property (nonatomic, strong) NSString * post_name;
 @property (nonatomic, strong) NSString * scale;
+@property (nonatomic, copy) NSString *experience_name;
+@property (nonatomic, copy) NSString *education_name;
+@property (nonatomic, copy) NSString *type_name;
 @end
 
 NS_ASSUME_NONNULL_END

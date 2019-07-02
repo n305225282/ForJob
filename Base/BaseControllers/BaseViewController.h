@@ -10,4 +10,6 @@
 
 @interface BaseViewController : UIViewController
 - (void)showInfoWithMessage:(NSString *)message;
+
+@property (nonatomic, strong) HttpHelper *requestManager;
 @end

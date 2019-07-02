@@ -32,8 +32,9 @@
         _manager = [[AFHTTPSessionManager alloc] initWithBaseURL:nil sessionConfiguration:config];
         
         _manager.requestSerializer = [AFJSONRequestSerializer serializer];
-        [_manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-        [_manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type" ];
+        _manager.requestSerializer = [AFHTTPRequestSerializer serializer];
+        [_manager.requestSerializer setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+
         
         _manager.responseSerializer = [AFJSONResponseSerializer serializer];
         

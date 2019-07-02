@@ -10,6 +10,7 @@
 #import "UserInfoHeadIconTableViewCell.h"
 #import "UserInfoTableViewCell.h"
 #import "ChangeInfoViewController.h"
+#import "LoginAndRegistViewController.h"
 
 @interface UserInfoViewController ()
 
@@ -36,6 +37,7 @@
     [button setTitle:@"退出登录" forState:(UIControlStateNormal)];
     button.titleLabel.font = [UIFont systemFontOfSize:15];
     [button setTitleColor:[UIColor redColor] forState:(UIControlStateNormal)];
+    [button addTarget:self action:@selector(logOutAction) forControlEvents:(UIControlEventTouchUpInside)];
     [bgView addSubview:button];
     button.sd_layout.centerXEqualToView(self.view).heightIs(35).topSpaceToView(bgView, 10).widthIs(100);
     [self.view addSubview:bgView];
@@ -138,19 +140,16 @@
         [self.navigationController pushViewController:changeVC animated:YES];
     }
 }
+
+- (void)logOutAction {
+    [self.navigationController pushViewController:[LoginAndRegistViewController new] animated:YES];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

@@ -29,6 +29,10 @@
     self.titleLabel.text = model.post_name;
     self.startEndLabel.text = model.start_end_time;
     self.timeLabel.text = model.update_time;
+    self.companyLabel.text = model.company_name;
+    self.educationLabel.text = model.education_name;
+    self.expLabel.text = model.experience_name;
+    self.jobTypeLabel.text = model.type_name;
 }
 
 - (void)awakeFromNib {

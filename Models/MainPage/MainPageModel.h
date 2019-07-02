@@ -13,4 +13,8 @@
 @property (nonatomic, strong) NSString * post_name;
 @property (nonatomic, strong) NSString * start_end_time;
 @property (nonatomic, strong) NSString * update_time;
+@property (nonatomic, strong) NSString * company_name;
+@property (nonatomic, copy) NSString *education_name;
+@property (nonatomic, copy) NSString *experience_name;
+@property (nonatomic, copy) NSString *type_name;
 @end

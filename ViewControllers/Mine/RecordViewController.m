@@ -9,6 +9,7 @@
 #import "RecordViewController.h"
 #import "MainPageTableViewCell.h"
 #import "JobDetailViewController.h"
+#import "MainPageModel.h"
 
 @interface RecordViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UIButton *zhaopinButton;
@@ -16,10 +17,28 @@
 @property (weak, nonatomic) IBOutlet UIView *zhaopinSelectView;
 @property (weak, nonatomic) IBOutlet UIView *endSelectView;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (nonatomic, strong) NSArray *dataSource;
 
 @end
 
 @implementation RecordViewController
+
+
+- (void)fetchDataList {
+    if ([self.title containsString:@"收藏"]) {
+        [self.requestManager postRequestWithInterfaceName:@"member/browseList" parame:@{@"member_id":@(1)} success:^(id  _Nullable respDict, NSString * _Nullable message) {
+            self.dataSource = [NSArray yy_modelArrayWithClass:[MainPageModel class] json:respDict];
+            [self.tableView reloadData];
+        } fail:^(id  _Nullable error) {
+            
+        }];
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self fetchDataList];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -52,33 +71,27 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 10;
+    return self.dataSource.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     MainPageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"mainCell" forIndexPath:indexPath];
     cell.selectionStyle = UITableViewCellSeparatorStyleNone;
+    cell.model = self.dataSource[indexPath.row];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     self.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:[JobDetailViewController new] animated:YES];
+    JobDetailViewController *jobDetailVC = [JobDetailViewController new];
+    MainPageModel *model = self.dataSource[indexPath.row];
+    jobDetailVC.jobId = model.idField;
+    [self.navigationController pushViewController:jobDetailVC animated:YES];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

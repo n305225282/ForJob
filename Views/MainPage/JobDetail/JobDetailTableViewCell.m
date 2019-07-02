@@ -23,7 +23,7 @@
 
 - (void)setJobDetailModel:(JobDetailModel *)jobDetailModel {
     _jobDetailModel = jobDetailModel;
-    NSAttributedString * attrStr = [[NSAttributedString alloc] initWithData:[jobDetailModel.obj_remark dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
+    NSAttributedString * attrStr = [[NSAttributedString alloc] initWithData:[jobDetailModel.post_detail dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
     self.job_remarkLabel.attributedText = attrStr;
 }
 

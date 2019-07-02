@@ -31,7 +31,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-    
+    self.requestManager = [HttpHelper sharedHttpHelper];
     UIBarButtonItem *barItem = [[UIBarButtonItem alloc]initWithTitle:@"" style:UIBarButtonItemStylePlain target:self action:nil];
     barItem.tintColor = [UIColor blackColor];
     self.navigationItem.backBarButtonItem = barItem;

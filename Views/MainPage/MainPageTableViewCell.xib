@@ -34,7 +34,7 @@
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="兼职" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VK4-qn-NRD">
                         <rect key="frame" x="26" y="49" width="27" height="16"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="27" id="7wn-ng-rR6"/>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="27" id="7wn-ng-rR6"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                         <color key="textColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
@@ -92,7 +92,7 @@
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="学历不限" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7jl-42-Bla">
                         <rect key="frame" x="94" y="75" width="60" height="16"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="60" id="JOl-Qz-ahu"/>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="JOl-Qz-ahu"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                         <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

@@ -23,7 +23,7 @@
 
 - (void)fetchData {
     [[HttpHelper sharedHttpHelper] postRequestWithInterfaceName:@"index/jobDetail" parame:@{@"id":@(self.jobId)} success:^(id  _Nullable respDict, NSString * _Nullable message) {
-        self.jobDetailModel = [JobDetailModel yy_modelWithJSON:respDict];
+        self.jobDetailModel = [JobDetailModel yy_modelWithJSON:respDict[@"joblist"][0]];
         [self.tableView reloadData];
     } fail:^(id  _Nullable error) {
         [self showInfoWithMessage:error];
@@ -65,8 +65,13 @@
         case 1:
             return 80;
             break;
-        case 2:
-            return 370;
+        case 2: {
+            if (self.jobDetailModel) {
+                return [self hideLabelLayoutHeight:self.jobDetailModel.post_detail withTextFontSize:3];
+            } else {
+                return 30;
+            }
+        }
             break;
         case 3:
             return 80;
@@ -75,6 +80,22 @@
             break;
     }
     return 0;
+}
+
+- (NSInteger)hideLabelLayoutHeight:(NSString *)content withTextFontSize:(CGFloat)mFontSize
+{
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    
+    paragraphStyle.lineSpacing = 10;  // 段落高度
+    
+    NSMutableAttributedString *attributes = [[NSMutableAttributedString alloc] initWithString:content];
+    
+    [attributes addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:mFontSize] range:NSMakeRange(0, content.length)];
+    [attributes addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, content.length)];
+    
+    CGSize attSize = [attributes boundingRectWithSize:CGSizeMake(200, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size;
+    
+    return attSize.height;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
