@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "TabbarViewController.h"
 #import "IQKeyboardManager.h"
+#import "LoginAndRegistViewController.h"
 
 @interface AppDelegate ()
 
@@ -20,7 +21,13 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    self.window.rootViewController = [TabbarViewController new];
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"token"] && [[NSUserDefaults standardUserDefaults] objectForKey:@"uuid"]) {
+        
+        self.window.rootViewController = [TabbarViewController new];
+    } else {
+        UINavigationController *navC = [[UINavigationController alloc] initWithRootViewController:[LoginAndRegistViewController new]];
+        self.window.rootViewController = navC;
+    }
     [self.window makeKeyAndVisible];
     
     IQKeyboardManager *manager = [IQKeyboardManager sharedManager];

@@ -12,8 +12,9 @@
 #import "ChangeInfoViewController.h"
 #import "LoginAndRegistViewController.h"
 
-@interface UserInfoViewController ()
 
+@interface UserInfoViewController ()
+@property (nonatomic, strong) NSDictionary *rootDict;
 @end
 
 @implementation UserInfoViewController
@@ -21,6 +22,15 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.hidden = NO;
+    [self.requestManager postRequestWithInterfaceName:@"member/eidtMemberInfo" parame:@{@"uuid":GET_UUID,@"token":GET_TOKEN} success:^(id  _Nullable respDict, NSString * _Nullable message) {
+        if ([DataCheck isValidDictionary:respDict]) {
+            self.rootDict = respDict;
+            [self.tableView reloadData];
+        } else
+            [self showInfoWithMessage:@"获取信息失败"];
+    } fail:^(id  _Nullable error) {
+        [self showInfoWithMessage:error];
+    }];
 }
 
 - (void)viewDidLoad {
@@ -56,6 +66,9 @@
         {
             UserInfoHeadIconTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"headCell" forIndexPath:indexPath];
             cell.selectionStyle = UITableViewCellSeparatorStyleNone;
+            if (self.rootDict) {
+                [cell.headImageVIew sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",self.rootDict[@"header_src"]]]];
+            }
             return cell;
         }
             break;
@@ -64,6 +77,9 @@
             UserInfoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"otherCell" forIndexPath:indexPath];
             cell.selectionStyle = UITableViewCellSeparatorStyleNone;
             cell.nameLabel.text = @"昵称";
+            if (self.rootDict) {
+                cell.detailLabel.text = [NSString stringWithFormat:@"%@",self.rootDict[@"nickname"]];
+            }
             cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
             return cell;
         }
@@ -73,6 +89,9 @@
             UserInfoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"otherCell" forIndexPath:indexPath];
             cell.selectionStyle = UITableViewCellSeparatorStyleNone;
             cell.nameLabel.text = @"生日";
+            if (self.rootDict) {
+                cell.detailLabel.text = [NSString stringWithFormat:@"%@",self.rootDict[@"birthday"]];
+            }
             cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
             return cell;
         }
@@ -82,6 +101,10 @@
             UserInfoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"otherCell" forIndexPath:indexPath];
             cell.selectionStyle = UITableViewCellSeparatorStyleNone;
             cell.nameLabel.text = @"性别";
+            if (self.rootDict) {
+                NSString *sex = [NSString stringWithFormat:@"%@",self.rootDict[@"sex"]];
+                                 cell.detailLabel.text = sex.integerValue == 1 ? @"男" : @"女";
+            }
             cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
             return cell;
         }
@@ -91,6 +114,9 @@
             UserInfoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"otherCell" forIndexPath:indexPath];
             cell.selectionStyle = UITableViewCellSeparatorStyleNone;
             cell.nameLabel.text = @"电话";
+            if (self.rootDict) {
+                cell.detailLabel.text = [NSString stringWithFormat:@"%@",self.rootDict[@"mobile"]];
+            }
             cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
             return cell;
         }
@@ -100,6 +126,9 @@
             UserInfoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"otherCell" forIndexPath:indexPath];
             cell.selectionStyle = UITableViewCellSeparatorStyleNone;
             cell.nameLabel.text = @"现居";
+            if (self.rootDict) {
+                cell.detailLabel.text = [NSString stringWithFormat:@"%@",self.rootDict[@"address"]];
+            }
             cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
             return cell;
         }
@@ -136,13 +165,19 @@
             break;
     }
     changeVC.showType = showType;
-    if (showType != -1) {
+    if (showType != -1 && showType != 1) {
         [self.navigationController pushViewController:changeVC animated:YES];
     }
 }
 
 - (void)logOutAction {
-    [self.navigationController pushViewController:[LoginAndRegistViewController new] animated:YES];
+    [self.requestManager postRequestWithInterfaceName:@"login/signOut" parame:@{@"uuid":[[NSUserDefaults standardUserDefaults] objectForKey:@"uuid"],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]} success:^(id  _Nullable respDict, NSString * _Nullable message) {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"uuid"];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"token"];
+        [UIApplication sharedApplication].keyWindow.rootViewController = [[UINavigationController alloc] initWithRootViewController: [LoginAndRegistViewController new]		];
+    } fail:^(id  _Nullable error) {
+        [self showInfoWithMessage:error];
+    }];
 }
 
 - (void)didReceiveMemoryWarning {

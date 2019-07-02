@@ -25,8 +25,15 @@
 
 
 - (void)fetchDataList {
-    if ([self.title containsString:@"收藏"]) {
-        [self.requestManager postRequestWithInterfaceName:@"member/browseList" parame:@{@"member_id":@(1)} success:^(id  _Nullable respDict, NSString * _Nullable message) {
+    if ([self.title containsString:@"浏览"]) {
+        [self.requestManager postRequestWithInterfaceName:@"member/browseList" parame:@{@"uuid":GET_UUID,@"token":GET_TOKEN,@"type":self.zhaopinButton.isSelected ? @"1" : @"2"} success:^(id  _Nullable respDict, NSString * _Nullable message) {
+            self.dataSource = [NSArray yy_modelArrayWithClass:[MainPageModel class] json:respDict];
+            [self.tableView reloadData];
+        } fail:^(id  _Nullable error) {
+            
+        }];
+    } else {
+        [self.requestManager postRequestWithInterfaceName:@"member/collectList" parame:@{@"uuid":GET_UUID,@"token":GET_TOKEN,@"type":self.zhaopinButton.isSelected ? @"1" : @"2"} success:^(id  _Nullable respDict, NSString * _Nullable message) {
             self.dataSource = [NSArray yy_modelArrayWithClass:[MainPageModel class] json:respDict];
             [self.tableView reloadData];
         } fail:^(id  _Nullable error) {
@@ -57,12 +64,14 @@
     self.zhaopinSelectView.hidden = NO;
     self.endButton.selected = NO;
     self.endSelectView.hidden = YES;
+    [self fetchDataList];
 }
 - (IBAction)endAction:(UIButton *)sender {
     sender.selected = YES;
     self.endSelectView.hidden = NO;
     self.zhaopinButton.selected = NO;
     self.zhaopinSelectView.hidden = YES;
+    [self fetchDataList];
 }
 
 

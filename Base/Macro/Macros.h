@@ -19,7 +19,9 @@
 
 #define kFont(x)         [UIFont systemFontOfSize:x] //正常字体
 #define kBoldFont(x)     [UIFont fontWithName:@"Helvetica-Bold" size:x] //加粗
+#define GET_TOKEN  [[NSUserDefaults standardUserDefaults] objectForKey:@"token"]
 
+#define GET_UUID  [[NSUserDefaults standardUserDefaults] objectForKey:@"uuid"]
 
 #pragma mark - 屏幕
 //屏幕宽高

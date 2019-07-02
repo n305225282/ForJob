@@ -39,10 +39,12 @@
 }
 
 - (void)showInfoWithMessage:(NSString *)message {
-    MBProgressHUD *hud = [MBProgressHUD HUDForView:[UIApplication sharedApplication].keyWindow];
+    MBProgressHUD*hud= [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.mode=MBProgressHUDModeCustomView;
+    
     hud.label.text = message;
-    [hud setMinShowTime:2];
-    [hud showAnimated:YES];
+    
+    [hud hideAnimated:YES afterDelay:1.5];
 }
 
 - (void)didReceiveMemoryWarning {

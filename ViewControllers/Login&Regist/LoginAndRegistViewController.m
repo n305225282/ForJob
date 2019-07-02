@@ -18,16 +18,21 @@
 @implementation LoginAndRegistViewController
 
 
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    self.navigationController.navigationBar.hidden = YES;
     self.registButton.layer.borderColor = [UIColor.blueColor colorWithAlphaComponent:0.6].CGColor;
     self.registButton.layer.borderWidth = .5f;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.navigationController.navigationBar.hidden = NO;
 }
 
 

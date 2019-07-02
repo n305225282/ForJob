@@ -13,23 +13,43 @@
 #import "UserInfoViewController.h"
 #import "FeedBackViewController.h"
 #import "AccountSafeViewController.h"
-@interface MineViewController ()
+#import "UserInfoModel.h"
 
+@interface MineViewController ()
+@property (nonatomic, strong) UserInfoModel *userInfoModel;
+@property (nonatomic, strong) MineHeaderView *contentView ;
 @end
 
 @implementation MineViewController
 
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.requestManager postRequestWithInterfaceName:@"member/getUsInfo" parame:@{@"uuid":GET_UUID,@"token":GET_TOKEN} success:^(id  _Nullable respDict, NSString * _Nullable message) {
+        if ([DataCheck isValidDictionary:respDict]) {
+            self.userInfoModel = [UserInfoModel yy_modelWithJSON:respDict];
+            self.contentView.userInfoModel = self.userInfoModel;
+            [self.tableView reloadData];
+        } else {
+            [self showInfoWithMessage:@"获取用户信息失败"];
+        }
+    } fail:^(id  _Nullable error) {
+        [self showInfoWithMessage:error];
+    }];
+}
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"我的";
-    MineHeaderView *contentView = [[NSBundle mainBundle] loadNibNamed:@"MineHeaderView" owner:self options:nil].firstObject;
+    self.contentView = [[NSBundle mainBundle] loadNibNamed:@"MineHeaderView" owner:self options:nil].firstObject;
     __weak MineViewController *weakSelf = self;
   
     UIView *headerView = [[UIView alloc] initWithFrame:(CGRectMake(0, 0, self.view.frame.size.width, 300))];
-    [headerView addSubview:contentView];
-    contentView.sd_layout.leftEqualToView(headerView).rightEqualToView(headerView).topEqualToView(headerView).bottomEqualToView(headerView);
+    [headerView addSubview:self.contentView];
+    self.contentView.sd_layout.leftEqualToView(headerView).rightEqualToView(headerView).topEqualToView(headerView).bottomEqualToView(headerView);
     
-    contentView.mineHeadBlock = ^(NSUInteger type) {
+    self.contentView.mineHeadBlock = ^(NSUInteger type) {
         RecordViewController *recordVC = [RecordViewController new];
         if (type == 1) {
             recordVC.title = @"浏览记录";

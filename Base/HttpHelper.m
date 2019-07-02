@@ -63,6 +63,7 @@
 
 
 - (void)postRequestWithInterfaceName:(NSString *)interfaceName parame:(NSDictionary *)param success:(void (^)(id _Nullable respDict,NSString *message))success fail:(void (^)(id _Nullable error))fail {
+    NSLog(@"%@接口的入参\n%@",interfaceName,param);
     [_manager POST:kHost(interfaceName) parameters:param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSDictionary *dict = responseObject;
         NSLog(@"%@接口返回的数据\n%@",interfaceName,dict);

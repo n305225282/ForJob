@@ -7,6 +7,7 @@
 //
 
 #import "MineHeaderView.h"
+#import "UserInfoModel.h"
 
 @interface MineHeaderView()
 @property (weak, nonatomic) IBOutlet UILabel *nickNameLabel;
@@ -19,6 +20,16 @@
 @end
 
 @implementation MineHeaderView
+
+- (void)setUserInfoModel:(UserInfoModel *)userInfoModel {
+    _userInfoModel = userInfoModel;
+    self.nickNameLabel.text = userInfoModel.nickname;
+    self.locationLabel.text = userInfoModel.address;
+    [self.headIconImageView sd_setImageWithURL:[NSURL URLWithString:userInfoModel.header_src]];
+    self.browseLabel.text = userInfoModel.browse;
+    self.collectionLabel.text = userInfoModel.collect;
+    
+}
 
 - (IBAction)userInfoAction:(UIButton *)sender {
     if (self.mineHeadBlock) {

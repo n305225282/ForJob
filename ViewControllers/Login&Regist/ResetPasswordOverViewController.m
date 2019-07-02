@@ -27,7 +27,7 @@
 }
 
 - (IBAction)didChangedEditing:(UITextField *)sender {
-    if (self.passwordTextField.text.length >= 6 && self.rePasswordTextField.text.length >= 6) {
+    if (self.passwordTextField.text.length >= 6 && self.rePasswordTextField.text.length >= 6 && [self.passwordTextField.text isEqualToString:self.rePasswordTextField.text]) {
         self.finishButton.alpha = 1;
         self.finishButton.enabled = YES;
     } else {
@@ -38,13 +38,12 @@
 }
 
 - (IBAction)finishAction:(id)sender {
-    for (UIViewController *vc in self.navigationController.viewControllers) {
-        if ([vc isKindOfClass:[LoginViewController class]]) {
-            
-            [self.navigationController popToViewController:vc animated:YES];
-            [self showInfoWithMessage:@"密码重置成功"];
-        }
-    }
+    [self.requestManager postRequestWithInterfaceName:@"login/setPassword" parame:@{@"phone":self.phone,@"verify_code":self.code,@"pwd":self.passwordTextField.text} success:^(id  _Nullable respDict, NSString * _Nullable message) {
+        [self showInfoWithMessage:message];
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    } fail:^(id  _Nullable error) {
+        [self showInfoWithMessage:error];
+    }];
 }
 
 @end

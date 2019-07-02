@@ -43,7 +43,7 @@
                     </constraints>
                     <nil key="textColor"/>
                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                    <textInputTraits key="textInputTraits" keyboardType="phonePad" secureTextEntry="YES"/>
+                    <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                     <connections>
                         <action selector="didChangedTextField:" destination="-1" eventType="editingChanged" id="o3Q-nZ-WnU"/>
                     </connections>

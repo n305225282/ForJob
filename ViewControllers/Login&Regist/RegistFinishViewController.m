@@ -20,11 +20,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.title = @"注册";
     self.finishButton.alpha = 0.6;
     self.finishButton.enabled = NO;
 }
 - (IBAction)didChangedTextField:(UITextField *)sender {
-    if (self.passwordTextField.text.length >= 6 && self.rePasswordTextField.text.length >= 6) {
+    if (self.passwordTextField.text.length >= 6 && self.rePasswordTextField.text.length >= 6 && [self.passwordTextField.text isEqualToString:self.rePasswordTextField.text]) {
         self.finishButton.alpha = 1;
         self.finishButton.enabled = YES;
     } else {
@@ -35,11 +36,12 @@
 
 
 - (IBAction)finishAction:(UIButton *)sender {
-    for (UIViewController *vc in self.navigationController.viewControllers) {
-        if ([vc isKindOfClass:[LoginAndRegistViewController class]]) {
-            [self.navigationController popToViewController:vc animated:YES];
-        }
-    }
+    [self.requestManager postRequestWithInterfaceName:@"login/register" parame:@{@"mobile":self.phone,@"pwd":self.passwordTextField.text,@"code":self.code} success:^(id  _Nullable respDict, NSString * _Nullable message) {
+        [self showInfoWithMessage:message];
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    } fail:^(id  _Nullable error) {
+        [self showInfoWithMessage:error];
+    }];
 }
 
 

@@ -10,7 +10,9 @@
 
 typedef void(^MineHeadBLOCK)(NSUInteger type);
 
+@class UserInfoModel;
 @interface MineHeaderView : UIView
 @property (nonatomic, copy) MineHeadBLOCK mineHeadBlock;
+@property (nonatomic, strong) UserInfoModel *userInfoModel;
 
 @end
