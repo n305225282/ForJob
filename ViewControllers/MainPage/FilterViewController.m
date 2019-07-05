@@ -11,6 +11,7 @@
 #import "CFMultistageDropdownMenuView.h"
 #import "MainPageTableViewCell.h"
 #import "MainPageModel.h"
+#import "JobDetailViewController.h"
 
 
 @interface FilterViewController ()<UITableViewDelegate,UITableViewDataSource>
@@ -73,7 +74,12 @@
 }
 
 
-
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    MainPageModel *model = self.dataSource[indexPath.row];
+    JobDetailViewController *jobDetailVC = [JobDetailViewController new];
+    jobDetailVC.jobId = model.idField;
+    [self.navigationController pushViewController:jobDetailVC animated:YES];
+}
 
 
 
@@ -220,14 +226,5 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

@@ -22,9 +22,27 @@
 
 @implementation ChangeInfoViewController
 
+- (void)updateUserInfoWithParam:(NSDictionary *)param {
+    [self.requestManager postRequestWithInterfaceName:@"member/eidtMemberInfo" parame:param success:^(id  _Nullable respDict, NSString * _Nullable message) {
+        [self showInfoWithMessage:message];
+        [self.navigationController popViewControllerAnimated:YES];
+    } fail:^(id  _Nullable error) {
+        [self showInfoWithMessage:error];
+    }];
+}
+
+- (void)didChangedTextField:(UITextField *)textField {
+    if (self.showType == 0) {
+        if (textField.text.length > 10) {
+            textField.text = textField.text;
+        }
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 //    self.navigationController.navigationBar.hidden = YES;
+    [self.mainTextField addTarget:self action:@selector(didChangedTextField:) forControlEvents:(UIControlEventEditingChanged)];
     switch (self.showType) {
         case 0:
             //姓名
@@ -32,7 +50,6 @@
             self.titleLabel.text = @"你的姓名";
             self.mainTextField.placeholder = @"请输入姓名";
             self.descLabel.text = @"3/10个汉字";
-            
             self.vCodeTextField.hidden = YES;
             self.vCodeButton.hidden = YES;
             self.vCodeSepLine.hidden = YES;
@@ -56,7 +73,7 @@
         case 2: {
             //位置
             self.titleLabel.text = @"你的位置";
-            self.mainTextField.placeholder = @"输入您的位置或获取位置";
+            self.mainTextField.placeholder = @"输入您的位置";
             self.descLabel.hidden = YES;
             
             self.vCodeTextField.hidden = YES;
@@ -74,7 +91,19 @@
 }
 
 - (IBAction)saveAction:(UIButton *)sender {
-    [self.navigationController popViewControllerAnimated:YES];
+    NSDictionary *param = nil;
+    if (self.showType == 0) {
+        if (self.mainTextField.text.length < 3) {
+            [self showInfoWithMessage:@"请输入大于三个字符"];
+            return;
+        }
+        param = @{@"nickname":self.mainTextField.text};
+    } else if (self.showType == 2) {
+        param = @{@"address":self.mainTextField.text};
+    }
+    if (param) {
+        [self updateUserInfoWithParam:param];
+    }
 }
 
 
@@ -112,14 +141,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

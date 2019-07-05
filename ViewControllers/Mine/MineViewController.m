@@ -42,6 +42,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"我的";
+    
     self.contentView = [[NSBundle mainBundle] loadNibNamed:@"MineHeaderView" owner:self options:nil].firstObject;
     __weak MineViewController *weakSelf = self;
   
