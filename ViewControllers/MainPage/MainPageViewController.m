@@ -14,6 +14,8 @@
 #import "JobDetailViewController.h"
 #import "CityChooseViewController.h"
 #import "MainPageModel.h"
+#import <PYSearch/PYSearch.h>
+#import "SearchResultViewController.h"
 
 @interface MainPageViewController ()
 @property (nonatomic, strong) MainPageViewModel *viewModel;
@@ -28,6 +30,25 @@
     self.viewModel.bindView = self.tableView;
     MainHeaderView *contentView = [[NSBundle mainBundle] loadNibNamed:@"MainHeaderView" owner:self options:nil].firstObject;
     __weak MainPageViewController *weakSelf = self;
+    
+    contentView.seachBlock = ^{
+        PYSearchViewController *searchViewController = [PYSearchViewController searchViewControllerWithHotSearches:nil searchBarPlaceholder:@"搜索职位" didSearchBlock:^(PYSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText) {
+            // Call this Block when completion search automatically
+            // Such as: Push to a view controller
+            if (searchText.length > 0) {
+//                self.keywords = searchText;
+                [self.navigationController pushViewController:[SearchResultViewController new] animated:YES];
+            }
+            [searchViewController dismissViewControllerAnimated:YES completion:nil];
+            
+        }];
+        [searchViewController setShowHotSearch:NO];
+        [searchViewController setSearchHistoryStyle:(PYSearchHistoryStyleBorderTag)];
+        // 3. present the searchViewController
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchViewController];
+        [self presentViewController:nav  animated:NO completion:nil];
+    };
+    
     
     //点击求职类型
     contentView.clickFilterButtonBlock = ^(NSString *title) {

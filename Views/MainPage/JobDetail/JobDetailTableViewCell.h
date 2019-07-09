@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+
+
 @class JobDetailModel;
 @interface JobDetailTableViewCell : UITableViewCell
 @property (nonatomic, strong) JobDetailModel *jobDetailModel;
+@property (nonatomic, copy) void(^heightBlock)(CGFloat height);
 @end

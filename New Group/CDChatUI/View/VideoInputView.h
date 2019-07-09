@@ -10,7 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
-typedef void(^BLOCK)(id data);
+typedef void(^BLOCK)(id data,NSInteger time);
 
 @interface VideoInputView : UIView
 {
@@ -20,6 +20,7 @@ typedef void(^BLOCK)(id data);
     UIView          *_volumeBgView;     //音量背景视图
     UIImageView     *_volumeImageView;  //音量图片
     UILabel         *_volumeLabel;      //提示文字
+    UILabel         *_countLabel;
     
     NSTimer         *_timer;            //定时器
     NSInteger       _countDown;         //倒计时,最多60秒
@@ -32,7 +33,7 @@ typedef void(^BLOCK)(id data);
     BOOL _isLeaveSpeakBtn;   //是否上滑
 }
 
-@property (nonatomic,readwrite,copy)BLOCK audioRecordeBlock;
+@property (nonatomic,readwrite,strong)BLOCK audioRecordeBlock;
 @end
 
 NS_ASSUME_NONNULL_END

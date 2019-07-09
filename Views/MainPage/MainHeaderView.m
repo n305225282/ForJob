@@ -32,8 +32,18 @@
         self.clickLocationButtonBlock(sender.titleLabel.text);
     }
 }
+
+
+
 - (IBAction)seachAction:(id)sender {
+    if (self.seachBlock) {
+        self.seachBlock();
+    }
+    
 }
+
+
+
 - (IBAction)filterButtonAction:(UIButton *)sender {
     NSString*title = @"";
     if (sender == self.minqiButton) {

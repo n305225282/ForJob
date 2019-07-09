@@ -11,7 +11,6 @@
 #import "CDChatDefine.h"
 
 #import "CDMessageCell.h"
-#import "CDChatInputView.h"
 
 #import "CDChatModel.h"
 
@@ -19,9 +18,13 @@
 
 #import "VideoInputView.h"
 
-@interface CDChatViewController ()<CDMessageCellDelegate,UITableViewDelegate, UITableViewDataSource>
+#import "DKSTextView.h"
+
+#import "DKSKeyboardView.h"
+
+@interface CDChatViewController ()<CDMessageCellDelegate,UITableViewDelegate, UITableViewDataSource,DKSKeyboardDelegate>
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) CDChatInputView *inputView;
+@property (nonatomic, strong) DKSKeyboardView *inputView;
 
 @property (nonatomic, strong) CDChatModel *chatModel;
 @end
@@ -38,19 +41,30 @@
     self.tableView.frame = CGRectMake(0, y, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - y - 50);
     
     [self.view addSubview:self.inputView];
+    __weak typeof(self) weakSelf = self;
+    self.inputView.videoInputView.audioRecordeBlock = ^(id  _Nonnull data, NSInteger count) {
+        [weakSelf sendData:@{@"type":@(CDMessageTypeVoice),
+                             @"voice":data,
+                             @"strVoiceTime":[NSString stringWithFormat:@"%lds",(long)count]
+                             }];
+        
+    };
 //    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(input:)];
 //    [self.inputView addGestureRecognizer:tap];
     [self.tableView reloadData];
     
-    VideoInputView *view = [[VideoInputView alloc] initWithFrame:(CGRectMake(0, self.view.size.height - 60, self.view.size.width, 60))];
-    __weak typeof(self) weakSelf;
-    view.audioRecordeBlock = ^(id  _Nonnull data) {
-        [self sendData:@{@"type":@(CDMessageTypeVoice),
-                             @"voice":data,
-                             @"strVoiceTime":@"2s"
-                             }];
-    };
-    [self.view addSubview:view];
+//    VideoInputView *view = [[VideoInputView alloc] initWithFrame:(CGRectMake(0, self.view.size.height - 60, self.view.size.width, 60))];
+//    __weak typeof(self) weakSelf;
+//    view.audioRecordeBlock = ^(id  _Nonnull data) {
+////        [self sendData:@{@"type":@(CDMessageTypeVoice),
+////                             @"voice":data,
+////                             @"strVoiceTime":@"2s"
+////                             }];
+//        [self sendData:@{@"type":@(CDMessageTypeText),
+//                         @"strContent":@"你好"
+//                         }];
+//    };
+//    [self.view addSubview:view];
     
     
 }
@@ -151,6 +165,34 @@
     return _tableView;
 }
 
+#pragma mark ====== DKSKeyboardDelegate ======
+//发送的文案
+- (void)textViewContentText:(NSString *)textStr {
+    NSLog(@"%@",textStr);
+    NSDictionary *dic = @{@"strContent": textStr,
+                          @"type": @(CDMessageTypeText)};
+    [self sendData:dic];
+}
+
+//keyboard的frame改变
+- (void)keyboardChangeFrameWithMinY:(CGFloat)minY {
+//     获取对应cell的rect值（其值针对于UITableView而言）
+    [self tableViewScrollToBottom];
+    NSIndexPath *lastIndex = [NSIndexPath indexPathForRow:self.chatModel.dataSource.count - 1 inSection:0];
+    CGRect rect = [self.tableView rectForRowAtIndexPath:lastIndex];
+    CGFloat lastMaxY = rect.origin.y + rect.size.height;
+    //如果最后一个cell的最大Y值大于tableView的高度
+    if (lastMaxY <= self.tableView.height) {
+        if (lastMaxY >= minY) {
+            self.tableView.y = minY - lastMaxY;
+        } else {
+            self.tableView.y = 0;
+        }
+    } else {
+        self.tableView.y += minY - CGRectGetMaxY(self.tableView.frame);
+    }
+}
+
 - (CDChatModel *)chatModel {
     if (!_chatModel) {
         _chatModel = [[CDChatModel alloc] init];
@@ -160,10 +202,13 @@
     return _chatModel;
 }
 
-- (CDChatInputView *)inputView {
+- (DKSKeyboardView *)inputView {
     if (!_inputView) {
         
-        _inputView = [[CDChatInputView alloc] initWithFrame:CGRectMake(0, [UIScreen mainScreen].bounds.size.height - 50, [UIScreen mainScreen].bounds.size.width, 50)];
+        _inputView = [[DKSKeyboardView alloc] initWithFrame:CGRectMake(0,  kScreenHeight- TabbarSafeBottomMargin - 52, kScreenWidth, 52)];
+        //设置代理方法
+        _inputView.delegate = self;
+
     }
     return _inputView;
 }

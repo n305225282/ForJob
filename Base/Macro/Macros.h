@@ -17,6 +17,9 @@
 //默认背景头像
 #define KBackHeadImage @"p1"
 
+#define kScreenWidth  UIScreen.mainScreen.bounds.size.width
+#define kScreenHeight  UIScreen.mainScreen.bounds.size.height
+
 #define kFont(x)         [UIFont systemFontOfSize:x] //正常字体
 #define kBoldFont(x)     [UIFont fontWithName:@"Helvetica-Bold" size:x] //加粗
 #define GET_TOKEN  [[NSUserDefaults standardUserDefaults] objectForKey:@"token"]

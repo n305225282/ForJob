@@ -11,12 +11,15 @@
 #import "JobLocationTableViewCell.h"
 #import "JobDetailTableViewCell.h"
 #import "JobCompanyTableViewCell.h"
+#import "JobWebViewTableViewCell.h"
 
 #import "JobDetailModel.h"
 
 
 @interface JobDetailViewController ()
 @property (nonatomic, strong) JobDetailModel *jobDetailModel;
+
+@property (nonatomic, assign) CGFloat detailHeight;
 @end
 
 @implementation JobDetailViewController
@@ -42,9 +45,10 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"JobInfoTableViewCell" bundle:nil] forCellReuseIdentifier:@"jobInfoCell"];
     [self.tableView registerNib:[UINib nibWithNibName:@"JobLocationTableViewCell" bundle:nil] forCellReuseIdentifier:@"locationCell"];
     [self.tableView registerNib:[UINib nibWithNibName:@"JobDetailTableViewCell" bundle:nil] forCellReuseIdentifier:@"detailCell"];
+    [self.tableView registerClass:[JobWebViewTableViewCell class] forCellReuseIdentifier:@"webCell"];
     [self.tableView registerNib:[UINib nibWithNibName:@"JobCompanyTableViewCell" bundle:nil] forCellReuseIdentifier:@"companyCell"];
     self.tableView.tableFooterView = [UIView new];
-    
+    self.detailHeight = 375;
     
 }
 
@@ -66,11 +70,7 @@
             return 80;
             break;
         case 2: {
-            if (self.jobDetailModel) {
-                return [self hideLabelLayoutHeight:self.jobDetailModel.post_detail withTextFontSize:3];
-            } else {
-                return 30;
-            }
+            return self.detailHeight;
         }
             break;
         case 3:
@@ -125,10 +125,17 @@
             
         case 2:
         {
-            JobDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"detailCell" forIndexPath:indexPath];
+//            JobDetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"detailCell" forIndexPath:indexPath];
+            JobWebViewTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"webCell" forIndexPath:indexPath];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             if (self.jobDetailModel) {
                 cell.jobDetailModel = self.jobDetailModel;
+                cell.heightBlock = ^(CGFloat height) {
+                    if (self.detailHeight < height) {
+                        self.detailHeight = height;
+                        [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:(UITableViewRowAnimationNone)];
+                    }
+                };
             }
             return cell;
         }

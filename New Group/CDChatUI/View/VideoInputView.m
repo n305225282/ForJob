@@ -19,7 +19,7 @@
         self.backgroundColor = [UIColor whiteColor];
         
         _recordButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _recordButton.frame = CGRectMake(10 , 10, 300 , 30);
+        _recordButton.frame = CGRectMake(0 , 0, CGRectGetWidth(frame) , CGRectGetHeight(frame));
         [_recordButton setTitle:@"按住发消息" forState:(UIControlStateNormal)];
         [_recordButton setTitleColor:[UIColor blackColor] forState:(UIControlStateNormal)];
 //        [_recordButton setImage:[UIImage imageNamed:@"press_for_audio"] forState:UIControlStateNormal];
@@ -66,16 +66,25 @@
         _volumeBgView = nil;
     }
     
-    CGFloat viewWidth = self.superview.frame.size.width/2.5;
+    CGFloat viewWidth = kScreenWidth/2.5;
     _volumeBgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, viewWidth, viewWidth+20)];
-    _volumeBgView.center = self.superview.center;
+    _volumeBgView.center = UIApplication.sharedApplication.keyWindow.center;
     _volumeBgView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
     _volumeBgView.layer.cornerRadius = 10;
-    [self.superview addSubview:_volumeBgView];
+    [UIApplication.sharedApplication.keyWindow addSubview:_volumeBgView];
     
     _volumeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 10, viewWidth - 30, viewWidth - 30)];
     _volumeImageView.image = [UIImage imageNamed:@"voice_1"];
+    _volumeImageView.hidden = YES;
     [_volumeBgView addSubview:_volumeImageView];
+    
+    _countLabel = [[UILabel alloc] initWithFrame:_volumeImageView.frame];
+    _countLabel.textAlignment = NSTextAlignmentCenter;
+    _countLabel.font = [UIFont systemFontOfSize:60];
+    _countLabel.text = @"60";
+    _countLabel.textColor = UIColor.whiteColor;
+    [_volumeBgView addSubview:_countLabel];
+    
     
     _volumeLabel = [[UILabel alloc] init];
     _volumeLabel.frame = CGRectMake(5, viewWidth - 10, viewWidth-10, 25);
@@ -156,7 +165,7 @@
     NSInteger voice = level*10 + 1;
     voice = voice > 8 ? 8 : voice;
     
-    NSString *imageIndex = [NSString stringWithFormat:@"voice_%ld", voice];
+    NSString *imageIndex = [NSString stringWithFormat:@"voice_%ld", (long)voice];
     if (_isLeaveSpeakBtn) {
         _volumeImageView.image = [UIImage imageNamed:@"rc_ic_volume_cancel"];
     } else {
@@ -164,6 +173,7 @@
     }
     
     _countDown --;
+    _countLabel.text = [NSString stringWithFormat:@"%ld",(long)_countDown];
     
     if (_countDown < 10 && _countDown > 0) {
         _volumeLabel.text = [NSString stringWithFormat:@"还剩 %ld 秒",(long)_countDown];
@@ -216,7 +226,7 @@
     //音频数据
        NSData *data = [NSData dataWithContentsOfFile:_recordFilePath];
     if (self.audioRecordeBlock) {
-        self.audioRecordeBlock(data);
+        self.audioRecordeBlock(data,60 - _countDown);
     }
 }
 

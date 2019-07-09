@@ -1,35 +1,73 @@
 //
-//  JobDetailTableViewCell.m
+//  JobWebViewTableViewCell.m
 //  ForJob
 //
-//  Created by Mac on 2019/5/25.
-//  Copyright © 2019年 Arther. All rights reserved.
+//  Created by 宇宇宇哲 on 2019/7/8.
+//  Copyright © 2019 Arther. All rights reserved.
 //
 
-#import "JobDetailTableViewCell.h"
+#import "JobWebViewTableViewCell.h"
 #import "JobDetailModel.h"
 #import <WebKit/WebKit.h>
 
-@interface JobDetailTableViewCell ()<WKNavigationDelegate>
-@property (weak, nonatomic) IBOutlet UILabel *job_remarkLabel;
+@interface JobWebViewTableViewCell () <WKNavigationDelegate>
+@property (nonatomic, strong) UILabel *label;
 @property (nonatomic, strong) WKWebView *webView;
 @property (nonatomic, assign) CGFloat oldHeight;
 @end
 
-@implementation JobDetailTableViewCell
+@implementation JobWebViewTableViewCell
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    [self.contentView addSubview:self.webView];
-    
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.label = [UILabel new];
+        self.label.text = @"职位详情";
+        self.label.font = [UIFont systemFontOfSize:16];
+        
+        [self.contentView sd_addSubviews:@[self.label,self.webView]];
+        self.label.sd_layout.leftSpaceToView(self, 20).topSpaceToView(self, 10).heightIs(20).widthIs(120);
+        
+        self.webView.sd_layout.leftSpaceToView(self, 20).topSpaceToView(self.label, 10).rightSpaceToView(self, 10).bottomEqualToView(self);
+        
+    }
+    return self;
+}
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        self.label = [UILabel new];
+        self.label.text = @"职位详情";
+        self.label.font = [UIFont systemFontOfSize:16];
+        
+        [self.contentView sd_addSubviews:@[self.label,self.webView]];
+        
+        self.label.sd_layout
+        .leftSpaceToView(self.contentView, 20)
+        .topSpaceToView(self.contentView, 10)
+        .heightIs(20)
+        .widthIs(120);
+        
+        self.webView.sd_layout.leftSpaceToView(self.contentView, 20).topSpaceToView(self.label, 10).rightSpaceToView(self.contentView, 10).bottomEqualToView(self.contentView);
+        
+    }
+    return self;
 }
 
 
 
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    
+}
+
+
 - (void)setJobDetailModel:(JobDetailModel *)jobDetailModel {
     _jobDetailModel = jobDetailModel;
-//    NSAttributedString * attrStr = [[NSAttributedString alloc] initWithData:[jobDetailModel.post_detail dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
-//    self.job_remarkLabel.attributedText = attrStr;
+    //    NSAttributedString * attrStr = [[NSAttributedString alloc] initWithData:[jobDetailModel.post_detail dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
+    //    self.job_remarkLabel.attributedText = attrStr;
     [self.webView loadHTMLString: [jobDetailModel.post_detail stringByReplacingOccurrencesOfString:@"\\" withString:@""] baseURL:nil];
 }
 
@@ -75,7 +113,7 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
+    
     // Configure the view for the selected state
 }
 

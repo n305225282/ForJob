@@ -13,4 +13,6 @@ typedef void(^MainHeaderBLOCK)(NSString *title);
 @property (nonatomic, copy) MainHeaderBLOCK clickFilterButtonBlock;
 
 @property (nonatomic, copy) MainHeaderBLOCK clickLocationButtonBlock;
+
+@property (nonatomic, copy) void(^seachBlock)(void);
 @end

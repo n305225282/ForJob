@@ -52,8 +52,19 @@
         case CDMessageTypePicture: // 图片
             contentSize = CGSizeMake(MsgPicWH, MsgPicWH);
             break;
-        case CDMessageTypeVoice: // 语音
-            contentSize = CGSizeMake(120, 35);
+        case CDMessageTypeVoice: {// 语音
+            NSInteger voiceLenght = [_message.msgVoiceTime integerValue];
+            CGFloat width = 30;
+            if (voiceLenght < 2) {
+                width = 30;
+            } else {
+                width = 30 + voiceLenght * 5;
+            }
+            if (width > 200) {
+                width = 200;
+            }
+            contentSize = CGSizeMake(width, 35);
+        }
             break;
         default:
             break;

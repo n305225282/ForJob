@@ -183,16 +183,18 @@
 
 - (UILabel *)voiceTimeLable {
     if (!_voiceTimeLable) {
-        _voiceTimeLable = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 70, 30)];
-        _voiceTimeLable.textAlignment = NSTextAlignmentCenter;
-        _voiceTimeLable.font = [UIFont systemFontOfSize:10];
+        _voiceTimeLable = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.voiceBackView.frame) , 0, 30, 30)];
+//        _voiceTimeLable.center = self.voiceBackView.center;
+        _voiceTimeLable.textAlignment = NSTextAlignmentRight;
+        _voiceTimeLable.font = [UIFont systemFontOfSize:13];
     }
     return _voiceTimeLable;
 }
 
 - (UIImageView *)voiceImageView {
     if (!_voiceImageView) {
-        _voiceImageView = [[UIImageView alloc] initWithFrame:CGRectMake(80, 5, 20, 20)];
+        _voiceImageView = [[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.voiceBackView.frame) - 15, 5, 15, 15)];
+        _voiceImageView.hidden= YES;
         _voiceImageView.image = [UIImage cd_imageWithName:@"chat_animation_white3"];
         _voiceImageView.animationImages = [NSArray arrayWithObjects:
                                       [UIImage cd_imageWithName:@"chat_animation_white1"],
