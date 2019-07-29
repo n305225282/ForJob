@@ -48,6 +48,7 @@
         if ([DataCheck isValidDictionary:respDict]) {
             [[NSUserDefaults standardUserDefaults] setObject:respDict[@"token"] forKey:@"token"];
             [[NSUserDefaults standardUserDefaults] setObject:respDict[@"uuid"] forKey:@"uuid"];
+            [[WebSocketManager shared] connectServer];
             [UIApplication sharedApplication].keyWindow.rootViewController = [TabbarViewController new];
         }
     } fail:^(id  _Nullable error) {

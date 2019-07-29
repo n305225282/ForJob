@@ -10,6 +10,8 @@
 #import "TabbarViewController.h"
 #import "IQKeyboardManager.h"
 #import "LoginAndRegistViewController.h"
+#import <BaiduMapAPI_Base/BMKMapManager.h>
+#import <WXApi.h>
 
 
 @interface AppDelegate ()
@@ -23,7 +25,7 @@
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     if ([[NSUserDefaults standardUserDefaults] objectForKey:@"token"] && [[NSUserDefaults standardUserDefaults] objectForKey:@"uuid"]) {
-        
+        [[WebSocketManager shared] connectServer];
         self.window.rootViewController = [TabbarViewController new];
     } else {
         UINavigationController *navC = [[UINavigationController alloc] initWithRootViewController:[LoginAndRegistViewController new]];
@@ -48,6 +50,19 @@
     
     [[TABAnimated sharedAnimated] initWithOnlySkeleton];
     [TABAnimated sharedAnimated].openLog = YES;
+    
+    
+    
+    // 要使用百度地图，请先启动BaiduMapManager
+    BMKMapManager *mapManager = [[BMKMapManager alloc] init];
+    // 如果要关注网络及授权验证事件，请设定generalDelegate参数
+    BOOL ret = [mapManager start:@"N3bbH498HSMMbWeGjDIMoGsvGo4RXpGq"  generalDelegate:nil];
+    if (!ret) {
+        NSLog(@"manager start failed!");
+    }
+    
+    
+//    [WXApi registerApp:@""];
     return YES;
 }
 
@@ -71,6 +86,9 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    if ([WebSocketManager shared].socketStatus == WebSocketStatusDisConnect) {
+        [[WebSocketManager shared] connectServer];
+    }
 }
 
 

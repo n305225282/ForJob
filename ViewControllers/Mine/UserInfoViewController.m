@@ -249,6 +249,7 @@
     [self.requestManager postRequestWithInterfaceName:@"login/signOut" parame:@{@"uuid":[[NSUserDefaults standardUserDefaults] objectForKey:@"uuid"],@"token":[[NSUserDefaults standardUserDefaults] objectForKey:@"token"]} success:^(id  _Nullable respDict, NSString * _Nullable message) {
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"uuid"];
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"token"];
+        [[WebSocketManager shared] webSocketClose];
         [UIApplication sharedApplication].keyWindow.rootViewController = [[UINavigationController alloc] initWithRootViewController: [LoginAndRegistViewController new]		];
     } fail:^(id  _Nullable error) {
         [self showInfoWithMessage:error];

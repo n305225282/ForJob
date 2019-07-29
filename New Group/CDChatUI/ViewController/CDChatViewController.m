@@ -22,7 +22,7 @@
 
 #import "DKSKeyboardView.h"
 
-@interface CDChatViewController ()<CDMessageCellDelegate,UITableViewDelegate, UITableViewDataSource,DKSKeyboardDelegate>
+@interface CDChatViewController ()<CDMessageCellDelegate,UITableViewDelegate, UITableViewDataSource,DKSKeyboardDelegate,WebSocketManagerDelegate>
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) DKSKeyboardView *inputView;
 
@@ -65,12 +65,20 @@
 //                         }];
 //    };
 //    [self.view addSubview:view];
-    
+    [WebSocketManager shared].delegate = self;
     
 }
 #pragma mark - Intial Methods
 
 #pragma mark - Network Methods
+- (void)fetchHistoryList {
+    [[HttpHelper sharedHttpHelper] postRequestWithInterfaceName:@"" parame:@{} success:^(id  _Nullable respDict, NSString * _Nullable message) {
+        
+    } fail:^(id  _Nullable error) {
+        
+    }];
+}
+
 
 #pragma mark - Target Methods
 - (void)input: (UIGestureRecognizer *)tap {
@@ -99,6 +107,9 @@
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
 }
 #pragma mark - External Delegate
+- (void)webSocketDidReceiveMessage:(NSString *)string {
+    NSLog(@"这里面收到的是%@",string);
+}
 
 #pragma mark - UITableViewDelegate,UITableViewDataSource
 
@@ -171,6 +182,8 @@
     NSLog(@"%@",textStr);
     NSDictionary *dic = @{@"strContent": textStr,
                           @"type": @(CDMessageTypeText)};
+    NSLog(@"%@",[dic yy_modelToJSONString]);
+    [[WebSocketManager shared] sendDataToServer:[dic yy_modelToJSONString]];
     [self sendData:dic];
 }
 

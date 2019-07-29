@@ -31,11 +31,11 @@
         [_recordButton addTarget:self action:@selector(recordButtonTouchUpDragEnter) forControlEvents:UIControlEventTouchDragEnter];
         [self addSubview:_recordButton];
         
-        _playRecordButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        _playRecordButton.frame = CGRectMake(50 , 200, 300 , 50);
-        [_playRecordButton setTitle:@"播放录音" forState:UIControlStateNormal];
-        [_playRecordButton addTarget:self action:@selector(playRecordButtonTouchUpInside) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:_playRecordButton];
+//        _playRecordButton = [UIButton buttonWithType:UIButtonTypeSystem];
+//        _playRecordButton.frame = CGRectMake(50 , 200, 300 , 50);
+//        [_playRecordButton setTitle:@"播放录音" forState:UIControlStateNormal];
+//        [_playRecordButton addTarget:self action:@selector(playRecordButtonTouchUpInside) forControlEvents:UIControlEventTouchUpInside];
+//        [self addSubview:_playRecordButton];
     }
     return self;
 }
