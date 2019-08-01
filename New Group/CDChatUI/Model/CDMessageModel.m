@@ -14,8 +14,8 @@
 - (void)setWithDict:(NSDictionary *)dict{
     
     self.userIcon = dict[@"strIcon"];
-    self.userName = dict[@"strName"];
-    self.msgId = dict[@"strId"];
+//    self.userName = dict[@"strName"];
+//    self.msgId = dict[@"strId"];
     self.msgTime = [self changeTheDateString:dict[@"strTime"]];
     self.from = [dict[@"from"] intValue];
     
@@ -28,7 +28,7 @@
             
         case 1:
             self.type = CDMessageTypePicture;
-            self.msgPicture = dict[@"picture"];
+            self.msgPicture = dict[@"strContent"];
             break;
             
         case 2:
@@ -46,7 +46,6 @@
 // "08-10 晚上08:09:41.0" ->
 // "昨天 上午10:09"或者"2018-08-10 凌晨07:09"
 - (NSString *)changeTheDateString:(NSString *)Str {
-    
     NSString *subString = [Str substringWithRange:NSMakeRange(0, 19)];
     NSDate *lastDate = [NSDate dateFromString:subString withFormat:@"yyyy-MM-dd HH:mm:ss"];
     NSTimeZone *zone = [NSTimeZone systemTimeZone];

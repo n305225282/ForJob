@@ -38,6 +38,15 @@
     // Do any additional setup after loading the view.
 }
 
+- (void)showLodingWithMessage:(NSString *)message {
+    MBProgressHUD*hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.label.text = message;
+}
+
+- (void)hideLoding {
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+}
+
 - (void)showInfoWithMessage:(NSString *)message {
     MBProgressHUD*hud= [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
     hud.mode=MBProgressHUDModeCustomView;
@@ -52,14 +61,11 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (AppDelegate *)appDelegate {
+    if (!_appDelegate) {
+        _appDelegate = myAppDelegate;
+    }
+    return _appDelegate;
 }
-*/
 
 @end

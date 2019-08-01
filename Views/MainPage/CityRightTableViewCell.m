@@ -8,11 +8,26 @@
 
 #import "CityRightTableViewCell.h"
 
+@interface CityRightTableViewCell ()
+@property (weak, nonatomic) IBOutlet UIImageView *dingweiImageVIew;
+
+@property (weak, nonatomic) IBOutlet UIImageView *xuanzeImageView;
+
+@end
+
 @implementation CityRightTableViewCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
+    self.dingweiImageVIew.hidden = YES;
+    self.xuanzeImageView.hidden = YES;
     // Initialization code
+}
+
+- (void)setIsSelected:(BOOL)isSelected {
+    _isSelected = isSelected;
+    self.dingweiImageVIew.hidden = !isSelected;
+    self.xuanzeImageView.hidden = !isSelected;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

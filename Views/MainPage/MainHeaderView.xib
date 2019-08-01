@@ -21,7 +21,7 @@
                     <constraints>
                         <constraint firstAttribute="width" constant="60" id="QrF-GB-o5d"/>
                     </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <state key="normal" title="上海"/>
                     <connections>
                         <action selector="locationAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="CNZ-Aq-aKk"/>
@@ -104,7 +104,7 @@
                     </constraints>
                 </view>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="syxlicon" translatesAutoresizingMaskIntoConstraints="NO" id="GEk-uY-bOz">
-                    <rect key="frame" x="65" y="40" width="10" height="15"/>
+                    <rect key="frame" x="75" y="40" width="10" height="15"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="10" id="qmy-6u-r0C"/>
                         <constraint firstAttribute="height" constant="15" id="ugW-pr-vMT"/>
@@ -131,7 +131,7 @@
                 <constraint firstItem="wui-u0-dCZ" firstAttribute="centerY" secondItem="q3k-8M-cyy" secondAttribute="centerY" id="PYW-oJ-EC2"/>
                 <constraint firstItem="z3t-p3-81B" firstAttribute="height" secondItem="q3k-8M-cyy" secondAttribute="height" id="RsX-FH-JRD"/>
                 <constraint firstItem="wui-u0-dCZ" firstAttribute="leading" secondItem="BF8-0L-Pbq" secondAttribute="trailing" constant="20" id="Wjq-9w-TDL"/>
-                <constraint firstItem="GEk-uY-bOz" firstAttribute="trailing" secondItem="dV3-ry-xec" secondAttribute="trailing" id="YOF-IY-YEx"/>
+                <constraint firstItem="GEk-uY-bOz" firstAttribute="trailing" secondItem="dV3-ry-xec" secondAttribute="trailing" constant="10" id="YOF-IY-YEx"/>
                 <constraint firstItem="z3t-p3-81B" firstAttribute="leading" secondItem="wui-u0-dCZ" secondAttribute="trailing" constant="20" id="ctG-uu-jyQ"/>
                 <constraint firstItem="B1w-D0-lFE" firstAttribute="centerY" secondItem="b8D-N6-er2" secondAttribute="centerY" id="eX1-iP-JJD"/>
                 <constraint firstItem="yqK-bA-B0S" firstAttribute="centerY" secondItem="b8D-N6-er2" secondAttribute="centerY" id="eYs-px-j9d"/>
@@ -157,6 +157,7 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
+                <outlet property="cityButton" destination="dV3-ry-xec" id="nbm-DY-Bfp"/>
                 <outlet property="jianzhiButton" destination="z3t-p3-81B" id="9hs-5T-H9s"/>
                 <outlet property="minqiButton" destination="q3k-8M-cyy" id="cso-Tk-7FT"/>
                 <outlet property="quanzhiButton" destination="wui-u0-dCZ" id="6r0-sV-daj"/>

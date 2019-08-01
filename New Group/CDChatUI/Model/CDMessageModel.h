@@ -29,7 +29,7 @@ typedef NS_ENUM(NSInteger, CDMessageFrom) {
 @property (nonatomic, copy) NSString *msgId;
 @property (nonatomic, copy) NSString *msgTime;
 @property (nonatomic, copy) NSString *msgContent;
-@property (nonatomic, strong) UIImage  *msgPicture;
+@property (nonatomic, strong) NSString  *msgPicture;
 @property (nonatomic, copy) NSData   *msgVoiceData;
 @property (nonatomic, copy) NSString *msgVoiceTime;
 @property (nonatomic, copy) NSString *msgVoiceUrl;

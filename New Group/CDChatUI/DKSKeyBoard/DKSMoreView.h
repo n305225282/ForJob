@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface DKSMoreView : UIView
-
+@property (nonatomic, strong) UIButton *photoClickButton;
 @end

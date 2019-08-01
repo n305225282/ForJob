@@ -16,7 +16,7 @@
 #import "UserInfoModel.h"
 
 @interface MineViewController ()
-@property (nonatomic, strong) UserInfoModel *userInfoModel;
+
 @property (nonatomic, strong) MineHeaderView *contentView ;
 @end
 
@@ -27,8 +27,9 @@
     [super viewWillAppear:animated];
     [self.requestManager postRequestWithInterfaceName:@"member/getUsInfo" parame:@{@"uuid":GET_UUID,@"token":GET_TOKEN} success:^(id  _Nullable respDict, NSString * _Nullable message) {
         if ([DataCheck isValidDictionary:respDict]) {
-            self.userInfoModel = [UserInfoModel yy_modelWithJSON:respDict];
-            self.contentView.userInfoModel = self.userInfoModel;
+            AppDelegate *appDelegate = myAppDelegate;
+            appDelegate.userInfoModel = [UserInfoModel yy_modelWithJSON:respDict];
+            self.contentView.userInfoModel = appDelegate.userInfoModel;
             [self.tableView reloadData];
         } else {
             [self showInfoWithMessage:@"获取用户信息失败"];
@@ -127,15 +128,5 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

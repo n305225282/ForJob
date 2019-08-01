@@ -29,13 +29,13 @@ typedef NS_ENUM(NSInteger, WebSocketStatus){
 @property(nonatomic, weak) id<WebSocketManagerDelegate> delegate;
 @property(nonatomic, assign) BOOL isConnect; //是否连接
 @property(nonatomic, assign) WebSocketStatus socketStatus;
-
+@property (nonatomic, copy) void(^connectBrokenBlock)(void);
+@property (nonatomic, copy) void(^didReConnected)(void);
 +(instancetype)shared;
 -(void)connectServer;//建立长连接
 -(void)reConnectServer;//重新连接
 -(void)webSocketClose;//关闭连接
 -(void)sendDataToServer:(NSString *)data; //向服务器发送数据
-
 @end
 
 NS_ASSUME_NONNULL_END

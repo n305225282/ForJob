@@ -11,6 +11,7 @@ typedef void(^MainHeaderBLOCK)(NSString *title);
 
 @interface MainHeaderView : UIView
 @property (nonatomic, copy) MainHeaderBLOCK clickFilterButtonBlock;
+@property (weak, nonatomic) IBOutlet UIButton *cityButton;
 
 @property (nonatomic, copy) MainHeaderBLOCK clickLocationButtonBlock;
 

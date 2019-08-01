@@ -16,9 +16,13 @@
 #import "MainPageModel.h"
 #import <PYSearch/PYSearch.h>
 #import "SearchResultViewController.h"
+#import <GKCover/GKCover.h>
+#import "View.h"
+#import "WechatShareManager.h"
 
 @interface MainPageViewController ()
 @property (nonatomic, strong) MainPageViewModel *viewModel;
+@property (nonatomic, strong) MainHeaderView *contentView;
 @end
 
 @implementation MainPageViewController
@@ -26,18 +30,45 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"职位";
+    
+    View *view = [[NSBundle mainBundle] loadNibNamed:@"View" owner:self options:nil].lastObject;
+    view.shareBlock = ^{
+        if ([WechatShareManager isWXAppInstalled]) {
+            [WechatShareManager shareToWechatWithWebTitle:@"蓝帝好工作" description:@"蓝帝好工作" thumbImage:[UIImage imageNamed:@"logo"] webpageUrl:@"http://www.baidu.com" type:0];
+        } else {
+            [self showInfoWithMessage:@"未检测到微信"];
+        }
+        [GKCover hide];
+    };
+    
+    [GKCover coverFrom:UIApplication.sharedApplication.keyWindow contentView:view style:(GKCoverStyleTranslucent) showStyle:(GKCoverShowStyleCenter) showAnimStyle:(GKCoverShowAnimStyleCenter) hideAnimStyle:(GKCoverHideAnimStyleCenter) notClick:NO showBlock:^{
+        
+    } hideBlock:^{
+        
+    }];
+    
+    [self.requestManager postRequestWithInterfaceName:@"member/getUsInfo" parame:@{@"uuid":GET_UUID,@"token":GET_TOKEN} success:^(id  _Nullable respDict, NSString * _Nullable message) {
+        if ([DataCheck isValidDictionary:respDict]) {
+            self.appDelegate.userInfoModel = [UserInfoModel yy_modelWithJSON:respDict];
+        } else {
+            [self showInfoWithMessage:@"获取用户信息失败"];
+        }
+    } fail:^(id  _Nullable error) {
+        [self showInfoWithMessage:error];
+    }];
+    
     self.viewModel = [[MainPageViewModel alloc] init];
     self.viewModel.bindView = self.tableView;
-    MainHeaderView *contentView = [[NSBundle mainBundle] loadNibNamed:@"MainHeaderView" owner:self options:nil].firstObject;
+    self.contentView = [[NSBundle mainBundle] loadNibNamed:@"MainHeaderView" owner:self options:nil].firstObject;
     __weak MainPageViewController *weakSelf = self;
     
-    contentView.seachBlock = ^{
+    self.contentView.seachBlock = ^{
         PYSearchViewController *searchViewController = [PYSearchViewController searchViewControllerWithHotSearches:nil searchBarPlaceholder:@"搜索职位" didSearchBlock:^(PYSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText) {
-            // Call this Block when completion search automatically
-            // Such as: Push to a view controller
             if (searchText.length > 0) {
+                SearchResultViewController *searchResultVC = [SearchResultViewController new];
+                searchResultVC.keyWords = searchText;
 //                self.keywords = searchText;
-                [self.navigationController pushViewController:[SearchResultViewController new] animated:YES];
+                [self.navigationController pushViewController:searchResultVC animated:YES];
             }
             [searchViewController dismissViewControllerAnimated:YES completion:nil];
             
@@ -51,7 +82,7 @@
     
     
     //点击求职类型
-    contentView.clickFilterButtonBlock = ^(NSString *title) {
+    self.contentView.clickFilterButtonBlock = ^(NSString *title) {
         FilterViewController *filterVC = [FilterViewController new];
         if ([title containsString:@"民企"]) {
             filterVC.filterId = 1;
@@ -69,17 +100,17 @@
     };
     
     //点击左上角城市
-    contentView.clickLocationButtonBlock = ^(NSString *title) {
+    self.contentView.clickLocationButtonBlock = ^(NSString *title) {
         CityChooseViewController *chooseVC = [CityChooseViewController new];
         weakSelf.hidesBottomBarWhenPushed = YES;
         [weakSelf.navigationController pushViewController:chooseVC animated:YES];
         weakSelf.hidesBottomBarWhenPushed = NO;
     };
     UIView *headerView = [[UIView alloc] initWithFrame:(CGRectMake(0, 0, self.view.frame.size.width, 200))];
-    headerView.backgroundColor = contentView.backgroundColor;
-    [self setStatusBarBackgroundColor:contentView.backgroundColor];
-    [headerView addSubview:contentView];
-    contentView.sd_layout.leftEqualToView(headerView).rightEqualToView(headerView).topEqualToView(headerView).bottomEqualToView(headerView);
+    headerView.backgroundColor = self.contentView.backgroundColor;
+    [self setStatusBarBackgroundColor:self.contentView.backgroundColor];
+    [headerView addSubview:self.contentView];
+    self.contentView.sd_layout.leftEqualToView(headerView).rightEqualToView(headerView).topEqualToView(headerView).bottomEqualToView(headerView);
     self.tableView.tableHeaderView = headerView;
     [self.tableView registerNib:[UINib nibWithNibName:@"MainPageTableViewCell" bundle:nil] forCellReuseIdentifier:@"mainCell"];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -108,7 +139,9 @@
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.hidden = YES;
     [self setStatusBarBackgroundColor:self.tableView.tableHeaderView.backgroundColor];
-    [self.viewModel fetchData];
+    [self.viewModel fetchDataWithParams:@{}];
+    NSString *city = [[NSUserDefaults standardUserDefaults] objectForKey:@"city"];
+    [self.contentView.cityButton setTitle:city.length > 0 ? city : @"上海" forState:(UIControlStateNormal)];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {

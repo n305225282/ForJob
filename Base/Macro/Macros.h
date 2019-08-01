@@ -53,4 +53,6 @@
 
 //接口地址
 #define kHost(x) [NSString stringWithFormat:@"http://sp.xijitech.com/api/%@",x]
+
+#define myAppDelegate (AppDelegate *)[UIApplication sharedApplication].delegate
 #endif /* Macros_h */

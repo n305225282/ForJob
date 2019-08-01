@@ -11,8 +11,8 @@
 #import "MainPageModel.h"
 
 @implementation MainPageViewModel
-- (void)fetchData {
-    [[HttpHelper sharedHttpHelper] postRequestWithInterfaceName:@"index/index" parame:@{} success:^(id _Nullable respDict,NSString *message) {
+- (void)fetchDataWithParams:(NSDictionary *)params {
+    [[HttpHelper sharedHttpHelper] postRequestWithInterfaceName:@"index/index" parame:params success:^(id _Nullable respDict,NSString *message) {
         NSLog(@"%@",respDict);
         if (respDict) {
             self.dataSource = [NSArray yy_modelArrayWithClass:[MainPageModel class] json:respDict[@"joblist"]];

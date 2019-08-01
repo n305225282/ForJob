@@ -9,5 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface CityRightTableViewCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UILabel *cityNameLabel;
+
+@property (nonatomic, assign) BOOL isSelected;
 
 @end

@@ -97,7 +97,7 @@
         case CDMessageTypePicture:
         {
             self.backImageView.hidden = NO;
-            self.backImageView.image = messageModel.msgPicture;
+            [self.backImageView sd_setImageWithURL:[NSURL URLWithString:messageModel.msgPicture]];
             self.backImageView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
             [self makeMaskView:self.backImageView withImage:self.resizableImage];
         }
@@ -166,7 +166,7 @@
         _backImageView.layer.cornerRadius = 5;
         _backImageView.layer.masksToBounds  = YES;
         _backImageView.contentMode = UIViewContentModeScaleAspectFill;
-        _backImageView.backgroundColor = [UIColor yellowColor];
+//        _backImageView.backgroundColor = [UIColor yellowColor];
         
     }
     return _backImageView;

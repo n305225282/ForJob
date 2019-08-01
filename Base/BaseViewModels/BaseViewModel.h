@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface BaseViewModel : NSObject
-- (void)fetchData;
+- (void)fetchDataWithParams:(NSDictionary *)params;
 
 - (void)loadMoreData;
 @end

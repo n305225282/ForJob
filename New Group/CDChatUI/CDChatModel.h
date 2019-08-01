@@ -12,6 +12,8 @@
 @class CDMessageFrame;
 @interface CDChatModel : NSObject
 
+@property (nonatomic, strong) UITableView *bindView;
+
 @property (nonatomic, strong) NSMutableArray<CDMessageFrame *> *dataSource;
 
 @property (nonatomic) BOOL isGroupChat;
@@ -21,6 +23,8 @@
 - (void)addRandomItemsToDataSource:(NSInteger)number;
 
 - (void)addSpecifiedItem:(NSDictionary *)dic;
+
+- (void)addItemsWithDataSource:(NSArray *)dataSource;
 
 - (void)recountFrame;
 

@@ -23,7 +23,11 @@
 @implementation ChangeInfoViewController
 
 - (void)updateUserInfoWithParam:(NSDictionary *)param {
-    [self.requestManager postRequestWithInterfaceName:@"member/eidtMemberInfo" parame:param success:^(id  _Nullable respDict, NSString * _Nullable message) {
+    NSMutableDictionary *paratems = [NSMutableDictionary dictionaryWithDictionary:param];
+    [paratems setObject:GET_TOKEN forKey:@"token"];
+    [paratems setObject:GET_UUID forKey:@"uuid"];
+    [paratems setObject:@"1" forKey:@"submit"];
+    [self.requestManager postRequestWithInterfaceName:@"member/eidtMemberInfo" parame:paratems success:^(id  _Nullable respDict, NSString * _Nullable message) {
         [self showInfoWithMessage:message];
         [self.navigationController popViewControllerAnimated:YES];
     } fail:^(id  _Nullable error) {
@@ -97,9 +101,9 @@
             [self showInfoWithMessage:@"请输入大于三个字符"];
             return;
         }
-        param = @{@"nickname":self.mainTextField.text};
+        param = @{@"key":@"nickname",@"value":self.mainTextField.text};
     } else if (self.showType == 2) {
-        param = @{@"address":self.mainTextField.text};
+        param = @{@"key":@"address",@"value":self.mainTextField.text};
     }
     if (param) {
         [self updateUserInfoWithParam:param];

@@ -211,6 +211,13 @@ static float viewHeight = 36.0f; //按钮视图高度
     return YES;
 }
 
+/// 点击照片
+- (void)photoClickButtonAction {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(photoClickButtonDelegate)]) {
+        [self.delegate photoClickButtonDelegate];
+    }
+}
+
 #pragma mark ====== init ======
 - (UIView *)backView {
     if (!_backView) {
@@ -228,6 +235,7 @@ static float viewHeight = 36.0f; //按钮视图高度
         _emojiBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_emojiBtn setBackgroundImage:[UIImage imageNamed:@"emojiImg"] forState:UIControlStateNormal];
         [_emojiBtn addTarget:self action:@selector(emojiBtn:) forControlEvents:UIControlEventTouchUpInside];
+        _emojiBtn.hidden = YES;
         [self.backView addSubview:_emojiBtn];
     }
     return _emojiBtn;
@@ -276,6 +284,7 @@ static float viewHeight = 36.0f; //按钮视图高度
     if (!_moreView) {
         _moreView = [[DKSMoreView alloc] init];
         _moreView.frame = CGRectMake(0, K_Height, K_Width, bottomHeight);
+        [_moreView.photoClickButton addTarget:self action:@selector(photoClickButtonAction) forControlEvents:(UIControlEventTouchUpInside)];
     }
     return _moreView;
 }

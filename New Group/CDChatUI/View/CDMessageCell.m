@@ -49,7 +49,7 @@
 #pragma mark - Intial Methods
 - (void)setupView {
     
-    self.backgroundColor = [UIColor whiteColor];
+    self.backgroundColor = [UIColor clearColor];
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     
     [self.contentView addSubview:self.dateLabel];
@@ -137,7 +137,7 @@
     // 头像
     _headBgView.frame = messageFrame.headImageViewF;
     self.headImageView.frame = CGRectMake(2, 2, _headBgView.width - 4, _headBgView.height - 4);
-    self.headImageView.image = [UIImage imageNamed:@"0.jpeg"];
+    [self.headImageView sd_setImageWithURL:[NSURL URLWithString:message.userIcon]];
     
     // 姓名
     self.namelabel.text = message.userName;
@@ -200,7 +200,7 @@
 - (UIView *)headBgView {
     if (!_headBgView) {
         _headBgView = [[UIView alloc] init];
-        _headBgView.backgroundColor = [UIColor greenColor];
+//        _headBgView.backgroundColor = [UIColor clearColor];
         _headBgView.layer.cornerRadius = 22;
         _headBgView.layer.masksToBounds = YES;
     }

@@ -16,14 +16,18 @@
 
 - (void)populateRandomDataSource {
     self.dataSource = [NSMutableArray array];
-    [self.dataSource addObjectsFromArray:[self additems:5]];
+//    [self.dataSource addObjectsFromArray:[self additems:5]];
 }
 
-- (void)addRandomItemsToDataSource:(NSInteger)number{
-    
-    for (int i=0; i<number; i++) {
-        [self.dataSource insertObject:[[self additems:1] firstObject] atIndex:0];
-    }
+//- (void)addRandomItemsToDataSource:(NSInteger)number{
+//
+//    for (int i=0; i<number; i++) {
+//        [self.dataSource insertObject:[[self additems:1] firstObject] atIndex:0];
+//    }
+//}
+- (void)addItemsWithDataSource:(NSArray *)dataSource {
+    self.dataSource = [[self convertItemsWithDataSource:dataSource] mutableCopy];
+    [self.bindView reloadData];
 }
 
 - (void)recountFrame
@@ -40,11 +44,9 @@
     CDMessageModel *message = [[CDMessageModel alloc] init];
     NSMutableDictionary *dataDic = [NSMutableDictionary dictionaryWithDictionary:dic];
     
-    NSString *URLStr = @"http://img0.bdstatic.com/img/image/shouye/xinshouye/mingxing16.jpg";
+
     [dataDic setObject:@(CDMessageFromMe) forKey:@"from"];
     [dataDic setObject:[[NSDate date] description] forKey:@"strTime"];
-	[dataDic setObject:@"就是我" forKey:@"strName"];
-    [dataDic setObject:URLStr forKey:@"strIcon"];
     
     [message setWithDict:dataDic];
     [message showDateTimeOffSetStart:previousTime end:dataDic[@"strTime"]];
@@ -58,13 +60,13 @@
 
 // 添加聊天item（一个cell内容）
 static NSString *previousTime = nil;
-- (NSArray<CDMessageFrame *> *)additems:(NSInteger)number
+- (NSArray<CDMessageFrame *> *)convertItemsWithDataSource:(NSArray *)dataSource
 {
     NSMutableArray<CDMessageFrame *> *result = [NSMutableArray array];
     
-    for (int i=0; i<number; i++) {
+    for (int i=0; i<dataSource.count; i++) {
         
-        NSDictionary *dataDic = [self getDic];
+        NSDictionary *dataDic = dataSource[i];
         CDMessageFrame *messageFrame = [[CDMessageFrame alloc]init];
         CDMessageModel *message = [[CDMessageModel alloc] init];
         [message setWithDict:dataDic];

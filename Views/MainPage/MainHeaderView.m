@@ -25,6 +25,11 @@
 }
 */
 
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    self.cityButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+}
+
 
 
 - (IBAction)locationAction:(UIButton *)sender {

@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+@class MessageListModel;
 @interface MessageMainTableViewCell : UITableViewCell
-
+@property (nonatomic, strong) MessageListModel *model;
 @end

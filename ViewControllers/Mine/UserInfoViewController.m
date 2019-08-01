@@ -12,6 +12,7 @@
 #import "ChangeInfoViewController.h"
 #import "LoginAndRegistViewController.h"
 #import "WSDatePickerView.h"
+#import <AFNetworking/AFNetworking.h>
 
 
 @interface UserInfoViewController ()
@@ -174,7 +175,7 @@
             
             NSString *date = [selectDate stringWithFormat:@"yyyy-MM-dd"];
             NSLog(@"选择的日期：%@",date);
-            [self updateUserInfoWithParam:@{@"birthday":date}];
+            [self updateUserInfoWithParam:@{@"key":@"birthday",@"value":date}];
         }];
         datepicker.dateLabelColor = [UIColor orangeColor];//年-月-日-时-分 颜色
         datepicker.datePickerColor = [UIColor blackColor];//滚轮日期颜色
@@ -187,10 +188,10 @@
     if (indexPath.row == 3) {
         UIAlertController *alertContrller = [UIAlertController alertControllerWithTitle:@"选择性别" message:nil preferredStyle:(UIAlertControllerStyleActionSheet)];
         [alertContrller addAction:[UIAlertAction actionWithTitle:@"男" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
-            [self updateUserInfoWithParam:@{@"sex":@"1"}];
+            [self updateUserInfoWithParam:@{@"key":@"sex",@"value":@"1"}];
         }]];
         [alertContrller addAction:[UIAlertAction actionWithTitle:@"女" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
-            [self updateUserInfoWithParam:@{@"sex":@"2"}];
+            [self updateUserInfoWithParam:@{@"key":@"sex",@"value":@"2"}];
         }]];
         [alertContrller addAction:[UIAlertAction actionWithTitle:@"取消" style:(UIAlertActionStyleCancel) handler:nil]];
         [self presentViewController:alertContrller animated:YES completion:nil];
@@ -228,10 +229,102 @@
 {
     [self dismissViewControllerAnimated:YES completion:^{
         UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
-        NSData *data = UIImageJPEGRepresentation(image, 1.0f);
-        NSString *encodedImageStr = [data base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
-        [self updateUserInfoWithParam:@{@"header_src":encodedImageStr}];
+        [self uploadImageToFetchUrl:image];
     }];
+}
+
+
+- (void)uploadImageToFetchUrl:(UIImage *)image {
+    NSDictionary * body = @{@"uid":self.appDelegate.userInfoModel.member_id,@"image":@"HeadImg"};
+    
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    
+    //ContentType设置
+    
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/html",@"image/jpeg",@"image/png",@"application/octet-stream",@"text/json",nil];
+    
+    
+    
+    manager.requestSerializer= [AFHTTPRequestSerializer serializer];
+    
+    manager.responseSerializer= [AFHTTPResponseSerializer serializer];
+    
+    
+    [self showLodingWithMessage:@"正在上传图片..."];
+    [manager POST:@"http://sp.xijitech.com/api/member/editHeadImg" parameters:body constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+        
+        //把image  转为data , POST上传只能传data
+        
+        NSData *data = UIImagePNGRepresentation([self imageCompressWithSimple:image]);
+        
+        //上传的参数(上传图片，以文件流的格式)
+        
+        [formData appendPartWithFileData:data
+         
+         
+         
+                                    name:@"image"
+         
+         
+         
+                                fileName:@"chat.png"
+         
+         
+         
+                                mimeType:@"image/png"];
+        
+        
+        
+    } progress:^(NSProgress * _Nonnull uploadProgress) {
+        
+        
+        
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        [self hideLoding];
+        　　//请求成功的block回调
+        
+        NSDictionary * resultDic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
+        
+        NSLog(@"上传成功%@",resultDic);
+        if ([resultDic[@"status"] isEqualToString:@"ok"]) {
+            [self fetchData];
+        }
+        
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        [self hideLoding];
+        [self showInfoWithMessage:@"上传失败,请重试..."];
+        NSLog(@"上传失败%@",error);
+        
+    }];
+}
+
+- (UIImage*)imageCompressWithSimple:(UIImage*)image{
+    CGSize size = image.size;
+    CGFloat scale = 1.0;
+    //TODO:KScreenWidth屏幕宽
+    
+    CGFloat KScreenWidth = [UIScreen mainScreen].bounds.size.width;
+    CGFloat KScreenHeight = [UIScreen mainScreen].bounds.size.height;
+    
+    if (size.width > KScreenWidth || size.height > KScreenHeight) {
+        if (size.width > size.height) {
+            scale = KScreenWidth / size.width;
+        }else {
+            scale = KScreenHeight / size.height;
+        }
+    }
+    CGFloat width = size.width;
+    CGFloat height = size.height;
+    CGFloat scaledWidth = width * scale;
+    CGFloat scaledHeight = height * scale;
+    CGSize secSize =CGSizeMake(scaledWidth, scaledHeight);
+    //TODO:设置新图片的宽高
+    UIGraphicsBeginImageContext(secSize); // this will crop
+    [image drawInRect:CGRectMake(0,0,scaledWidth,scaledHeight)];
+    UIImage* newImage= UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
 }
 
 
@@ -262,7 +355,11 @@
 }
 
 - (void)updateUserInfoWithParam:(NSDictionary *)param {
-    [self.requestManager postRequestWithInterfaceName:@"member/eidtMemberInfo" parame:param success:^(id  _Nullable respDict, NSString * _Nullable message) {
+    NSMutableDictionary *paratems = [NSMutableDictionary dictionaryWithDictionary:param];
+    [paratems setObject:GET_TOKEN forKey:@"token"];
+    [paratems setObject:GET_UUID forKey:@"uuid"];
+    [paratems setObject:@"1" forKey:@"submit"];
+    [self.requestManager postRequestWithInterfaceName:@"member/eidtMemberInfo" parame:paratems success:^(id  _Nullable respDict, NSString * _Nullable message) {
         [self showInfoWithMessage:message];
         [self fetchData];
     } fail:^(id  _Nullable error) {

@@ -62,7 +62,7 @@
     }
     
     
-//    [WXApi registerApp:@""];
+    [WXApi registerApp:@"wxd60ed8bcbc1311f1"];
     return YES;
 }
 

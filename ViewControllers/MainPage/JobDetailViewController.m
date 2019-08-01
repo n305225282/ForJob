@@ -16,12 +16,19 @@
 #import "JobWebViewTableViewCell.h"
 
 #import "JobDetailModel.h"
+#import "CDChatViewController.h"
 
 
 @interface JobDetailViewController ()
 @property (nonatomic, strong) JobDetailModel *jobDetailModel;
 
 @property (nonatomic, assign) CGFloat detailHeight;
+
+@property (nonatomic, strong) UIView *bottomView;
+
+@property (nonatomic, strong) UIButton *makePhoneCallButton;
+
+@property (nonatomic, strong) UIButton *goChatButton;
 @end
 
 @implementation JobDetailViewController
@@ -38,11 +45,13 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self fetchData];
+    self.tableView.sd_resetLayout.leftEqualToView(self.view).topEqualToView(self.view).rightEqualToView(self.view).bottomSpaceToView(self.view,60+TabbarSafeBottomMargin);
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"职位详情";
+    
     // Do any additional setup after loading the view.
     [self.tableView registerNib:[UINib nibWithNibName:@"JobInfoTableViewCell" bundle:nil] forCellReuseIdentifier:@"jobInfoCell"];
     [self.tableView registerNib:[UINib nibWithNibName:@"JobLocationTableViewCell" bundle:nil] forCellReuseIdentifier:@"locationCell"];
@@ -52,11 +61,29 @@
     self.tableView.tableFooterView = [UIView new];
     self.detailHeight = 375;
     
+    
+    [self.view addSubview:self.bottomView];
+    [self.view bringSubviewToFront:self.bottomView];
+    self.bottomView.sd_layout.leftEqualToView(self.view).rightEqualToView(self.view).bottomSpaceToView(self.view, TabbarSafeBottomMargin).heightIs(60);
+    
+}
+
+- (void)makePhoneCallButtonAction {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"telprompt://%@",self.jobDetailModel.mobile]]];
+}
+
+
+- (void)goChatButtonAction {
+    CDChatViewController *chatVC = [CDChatViewController new];
+    chatVC.title = self.jobDetailModel.post_name;
+    chatVC.post_id = [NSString stringWithFormat:@"%ld",self.jobId];
+    self.hidesBottomBarWhenPushed =YES;
+    [self.navigationController pushViewController:chatVC animated:YES];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -165,6 +192,44 @@
     if (indexPath.row == 1) {
         [self.navigationController pushViewController:[MapViewController new] animated:YES];
     }
+}
+
+
+- (UIView *)bottomView {
+    if (!_bottomView) {
+        _bottomView = [UIView new];
+        _bottomView.backgroundColor = UIColor.whiteColor;
+        [_bottomView sd_addSubviews:@[self.makePhoneCallButton,self.goChatButton]];
+        self.makePhoneCallButton.sd_layout.centerYEqualToView(self.bottomView).leftSpaceToView(self.bottomView, 10).topSpaceToView(self.bottomView, 10).bottomSpaceToView(self.bottomView, 10).widthRatioToView(self.bottomView, 0.3);
+        
+        self.goChatButton.sd_layout.centerYEqualToView(self.bottomView).heightRatioToView(self.makePhoneCallButton, 1).leftSpaceToView(self.makePhoneCallButton, 10).rightSpaceToView(self.bottomView, 10);
+    }
+    return _bottomView;
+}
+
+- (UIButton *)makePhoneCallButton {
+    if (!_makePhoneCallButton) {
+        _makePhoneCallButton = [UIButton buttonWithType:(UIButtonTypeSystem)];
+        [_makePhoneCallButton setTitle:@"打电话" forState:(UIControlStateNormal)];
+        _makePhoneCallButton.layer.cornerRadius = 5;
+        _makePhoneCallButton.layer.borderColor = [UIColor colorWithRed:27/255.0 green:118/255.0 blue:255/255.0 alpha:1].CGColor;
+        _makePhoneCallButton.layer.borderWidth = .5f;
+        [_makePhoneCallButton addTarget:self action:@selector(makePhoneCallButtonAction) forControlEvents:(UIControlEventTouchUpInside)];
+    }
+    return _makePhoneCallButton;
+}
+
+- (UIButton *)goChatButton {
+    if (!_goChatButton) {
+        _goChatButton = [UIButton buttonWithType:(UIButtonTypeCustom)];
+        [_goChatButton setTitle:@"开始聊天" forState:(UIControlStateNormal)];
+        [_goChatButton setBackgroundColor:[UIColor colorWithRed:27/255.0 green:118/255.0 blue:255/255.0 alpha:1]];
+        _goChatButton.titleLabel.font = [UIFont systemFontOfSize:15];
+        _goChatButton.layer.cornerRadius = 5;
+        _goChatButton.layer.borderWidth = .5f;
+        [_goChatButton addTarget:self action:@selector(goChatButtonAction) forControlEvents:(UIControlEventTouchUpInside)];
+    }
+    return _goChatButton;
 }
 
 @end

@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BaseViewController.h"
 
-@interface CDChatViewController : UIViewController
+@interface CDChatViewController : BaseViewController
 
-
+@property (nonatomic, copy) NSString *post_id;
 @end

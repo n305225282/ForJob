@@ -25,7 +25,7 @@
 - (void)keyboardChangeFrameWithMinY:(CGFloat)minY;
 
 
-
+- (void)photoClickButtonDelegate;
 @end
 
 

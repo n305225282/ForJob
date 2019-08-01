@@ -12,4 +12,7 @@
 - (void)showInfoWithMessage:(NSString *)message;
 
 @property (nonatomic, strong) HttpHelper *requestManager;
+@property (nonatomic, strong) AppDelegate *appDelegate;
+- (void)showLodingWithMessage:(NSString *)message;
+- (void)hideLoding;
 @end

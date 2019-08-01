@@ -9,7 +9,7 @@
 #import "BaseViewModel.h"
 
 @implementation BaseViewModel
-- (void)fetchData {
+- (void)fetchDataWithParams:(NSDictionary *)params {
     
 }
 

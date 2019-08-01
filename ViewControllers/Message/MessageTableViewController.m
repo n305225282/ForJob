@@ -9,9 +9,12 @@
 #import "MessageTableViewController.h"
 #import "MessageMainTableViewCell.h"
 #import "CDChatViewController.h"
+#import "MessageListModel.h"
 
 @interface MessageTableViewController ()
 @property (nonatomic, strong) UIView *seachView;
+
+@property (nonatomic, strong) NSArray<MessageListModel *> *dataSource;
 @end
 
 @implementation MessageTableViewController
@@ -44,21 +47,40 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"消息";
-    [self creatSeachView];
+//    [self creatSeachView];
     [self.tableView registerNib:[UINib nibWithNibName:@"MessageMainTableViewCell" bundle:nil] forCellReuseIdentifier:@"messageMainCell"];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.rowHeight = 100;
-    
-    
-    // Do any additional setup after loading the view.
+ 
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self fetchDataSource];
+}
+
+- (void)fetchDataSource {
+    [self.requestManager postRequestWithInterfaceName:@"index/getOneInfo" parame:@{@"uid":self.appDelegate.userInfoModel.member_id} success:^(id  _Nullable respDict, NSString * _Nullable message) {
+        if (![respDict isEqual:[NSNull null]]) {
+            NSLog(@"哈哈哈哈");
+            self.dataSource = [NSArray yy_modelArrayWithClass:[MessageListModel class] json:respDict];
+            [self.tableView reloadData];
+        } else {
+            NSLog(@"oh no");
+        }
+    } fail:^(id  _Nullable error) {
+        
+    }];
+}
+
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 10;
+    return self.dataSource.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     MessageMainTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"messageMainCell" forIndexPath:indexPath];
+    cell.model = self.dataSource[indexPath.row];
     return cell;
 }
 
@@ -66,23 +88,15 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self cancleAction:nil];
     self.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:[CDChatViewController new] animated:YES];
+    CDChatViewController *chatVC = [CDChatViewController new];
+    chatVC.title = self.dataSource[indexPath.row].nickname;
+    [self.navigationController pushViewController:chatVC animated:YES];
     self.hidesBottomBarWhenPushed = NO;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

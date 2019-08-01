@@ -18,7 +18,7 @@
     [super viewDidLoad];
     self.tableView = [[UITableView alloc] initWithFrame:(CGRectZero) style:(UITableViewStylePlain)];
     [self.view addSubview:self.tableView];
-    self.tableView.sd_layout.leftEqualToView(self.view).topEqualToView(self.view).rightEqualToView(self.view).bottomEqualToView(self.view);
+    self.tableView.sd_layout.leftEqualToView(self.view).topEqualToView(self.view).rightEqualToView(self.view).bottomSpaceToView(self.view,TabbarSafeBottomMargin);
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.showsVerticalScrollIndicator = NO;

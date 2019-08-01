@@ -89,6 +89,11 @@ dispatch_async(dispatch_get_main_queue(), block);\
     NSLog(@"已经连接,开启心跳");
     self.isConnect = YES;
     self.socketStatus = WebSocketStatusConnect;
+    if (GET_TOKEN) {
+        if (self.didReConnected) {
+            self.didReConnected();
+        }
+    }
     [self initHeartBeat];//开始心跳
 }
 
@@ -108,7 +113,9 @@ dispatch_async(dispatch_get_main_queue(), block);\
     }else{
         [self reConnectServer];//连接失败，重新连接
     }
-    
+    if (self.connectBrokenBlock) {
+        self.connectBrokenBlock();
+    }
 }
 
 //接收消息
