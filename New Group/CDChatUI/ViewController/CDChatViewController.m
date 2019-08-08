@@ -65,9 +65,11 @@
     [WebSocketManager shared].delegate = self;
     [WebSocketManager shared].connectBrokenBlock = ^{
         [self hideLoding];
-        [self showLodingWithMessage:@"正在链接聊天服务..."];
+        NSLog(@"控制器里监听到断开");
+        [self showLodingWithMessage:@"正在连接聊天服务..."];
     };
     [WebSocketManager shared].didReConnected = ^{
+        NSLog(@"控制器接收到数据,重连了");
         NSDictionary *loginDic = @{
                                    @"type":@"login",
                                    @"room_id":@(1),
@@ -75,6 +77,7 @@
                                    };
         [[WebSocketManager shared] sendDataToServer:[loginDic yy_modelToJSONString]];
         [self hideLoding];
+        [self fetchHistoryList];
     };
 }
 
