@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *educationLabel;
 @property (weak, nonatomic) IBOutlet UILabel *expLabel;
 @property (weak, nonatomic) IBOutlet UILabel *companyLabel;
+@property (weak, nonatomic) IBOutlet UILabel *salaryLabel;
 
 @end
 
@@ -33,6 +34,7 @@
     self.educationLabel.text = model.education_name;
     self.expLabel.text = model.experience_name;
     self.jobTypeLabel.text = model.type_name;
+    self.salaryLabel.text = model.wage;
 }
 
 - (void)awakeFromNib {

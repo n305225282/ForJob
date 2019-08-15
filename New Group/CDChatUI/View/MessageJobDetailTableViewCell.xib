@@ -44,34 +44,34 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="经验不限" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MIv-g3-6nu">
-                                <rect key="frame" x="159" y="64" width="60" height="16"/>
+                                <rect key="frame" x="149" y="64" width="53.5" height="16"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="60" id="X18-0h-UD9"/>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="80" id="X18-0h-UD9"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="学历不限" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nyz-uH-nj0">
-                                <rect key="frame" x="88" y="64" width="60" height="16"/>
+                                <rect key="frame" x="84.5" y="64" width="53.5" height="16"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="Ht3-Ft-3Kh"/>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="60" id="Ht3-Ft-3Kh"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="上海松江" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="piu-OB-CyO">
-                                <rect key="frame" x="20" y="64" width="57" height="16"/>
+                                <rect key="frame" x="20" y="64" width="53.5" height="16"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="57" id="t9E-XK-eCt"/>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="120" id="t9E-XK-eCt"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2k2-1M-oBB">
-                                <rect key="frame" x="82" y="67" width="1" height="10"/>
+                                <rect key="frame" x="78.5" y="67" width="1" height="10"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="1" id="1bw-U8-Ok9"/>
@@ -79,17 +79,38 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ysh-zo-9QU">
-                                <rect key="frame" x="153" y="67" width="1" height="10"/>
+                                <rect key="frame" x="143" y="67" width="1" height="10"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="1" id="UIb-sk-lHw"/>
                                     <constraint firstAttribute="height" constant="10" id="t5q-9C-ADg"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="兼职" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="heE-TJ-Hp4">
+                                <rect key="frame" x="57" y="38" width="27" height="16"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="27" id="0AQ-qB-6Vo"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="兼职" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="toB-4v-SNL">
+                                <rect key="frame" x="281" y="38" width="27" height="16"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="27" id="KR5-I3-HvT"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="toB-4v-SNL" firstAttribute="centerY" secondItem="heE-TJ-Hp4" secondAttribute="centerY" id="634-fo-thr"/>
+                            <constraint firstItem="heE-TJ-Hp4" firstAttribute="centerY" secondItem="l4o-uk-Bbs" secondAttribute="centerY" id="6yH-Gk-mMD"/>
                             <constraint firstAttribute="trailing" secondItem="xdT-dh-ulB" secondAttribute="trailing" constant="20" id="7XG-G8-eYY"/>
+                            <constraint firstItem="heE-TJ-Hp4" firstAttribute="leading" secondItem="l4o-uk-Bbs" secondAttribute="trailing" constant="10" id="C4P-4C-T5V"/>
                             <constraint firstItem="MIv-g3-6nu" firstAttribute="centerY" secondItem="piu-OB-CyO" secondAttribute="centerY" id="CXL-Jn-JDo"/>
                             <constraint firstItem="2k2-1M-oBB" firstAttribute="leading" secondItem="piu-OB-CyO" secondAttribute="trailing" constant="5" id="Dfr-5c-EAg"/>
                             <constraint firstItem="ysh-zo-9QU" firstAttribute="centerY" secondItem="Nyz-uH-nj0" secondAttribute="centerY" id="KJ4-sw-blu"/>
@@ -102,6 +123,7 @@
                             <constraint firstItem="ysh-zo-9QU" firstAttribute="leading" secondItem="Nyz-uH-nj0" secondAttribute="trailing" constant="5" id="aIM-te-iIU"/>
                             <constraint firstItem="l4o-uk-Bbs" firstAttribute="leading" secondItem="z91-H0-Hns" secondAttribute="leading" id="bkl-9d-TpF"/>
                             <constraint firstItem="piu-OB-CyO" firstAttribute="top" secondItem="l4o-uk-Bbs" secondAttribute="bottom" constant="10" id="cRf-sj-Xuj"/>
+                            <constraint firstItem="toB-4v-SNL" firstAttribute="trailing" secondItem="xdT-dh-ulB" secondAttribute="trailing" id="daU-br-OHk"/>
                             <constraint firstItem="xdT-dh-ulB" firstAttribute="top" secondItem="389-g8-FFC" secondAttribute="top" constant="10" id="maw-ai-bb0"/>
                             <constraint firstItem="l4o-uk-Bbs" firstAttribute="top" secondItem="z91-H0-Hns" secondAttribute="bottom" constant="10" id="nez-oD-F0t"/>
                             <constraint firstItem="MIv-g3-6nu" firstAttribute="leading" secondItem="ysh-zo-9QU" secondAttribute="trailing" constant="5" id="xqt-KK-Iuv"/>
@@ -122,12 +144,14 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="aW0-zy-SZf"/>
             <connections>
+                <outlet property="creatTimeLabel" destination="toB-4v-SNL" id="8U8-fY-QyE"/>
                 <outlet property="education" destination="Nyz-uH-nj0" id="rnG-J4-asP"/>
                 <outlet property="experience" destination="MIv-g3-6nu" id="0qE-MI-fiZ"/>
                 <outlet property="locationLabel" destination="piu-OB-CyO" id="rbr-9H-827"/>
                 <outlet property="nameLabel" destination="z91-H0-Hns" id="fv2-Ab-lL8"/>
                 <outlet property="typeLabel" destination="l4o-uk-Bbs" id="7yk-VJ-gWu"/>
                 <outlet property="wageLabel" destination="xdT-dh-ulB" id="gzv-sf-1mw"/>
+                <outlet property="zp_dateLabel" destination="heE-TJ-Hp4" id="d4u-iy-WyN"/>
             </connections>
             <point key="canvasLocation" x="175.36231884057972" y="216.29464285714286"/>
         </tableViewCell>

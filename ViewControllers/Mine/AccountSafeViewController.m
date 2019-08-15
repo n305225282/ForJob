@@ -38,7 +38,7 @@
         cell.textLabel.text = @"我的账号";
         UILabel *phoneNumberLabel = [UILabel new];
         [cell addSubview:phoneNumberLabel];
-        phoneNumberLabel.text = @"182xxxxxxxx";
+        phoneNumberLabel.text = [NSString stringWithFormat:@"%@xxxxxxxx",[self.appDelegate.userInfoModel.mobile substringToIndex:3]];
         phoneNumberLabel.font = [UIFont systemFontOfSize:14];
         phoneNumberLabel.textColor = [UIColor lightGrayColor];
         phoneNumberLabel.sd_layout.rightSpaceToView(cell, 20).heightIs(30).widthIs(100).centerYEqualToView(cell);

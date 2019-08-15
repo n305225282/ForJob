@@ -17,4 +17,5 @@
 @property (nonatomic, copy) NSString *education_name;
 @property (nonatomic, copy) NSString *experience_name;
 @property (nonatomic, copy) NSString *type_name;
+@property (nonatomic, copy) NSString *wage;
 @end

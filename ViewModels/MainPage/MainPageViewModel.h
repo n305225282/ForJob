@@ -11,4 +11,5 @@
 @interface MainPageViewModel : BaseViewModel
 @property (nonatomic, strong) UITableView *bindView;
 @property (nonatomic, strong) NSArray *dataSource;
+@property (nonatomic, copy) void(^HandleBlock)(NSDictionary *modelDic);
 @end

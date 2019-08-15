@@ -65,13 +65,14 @@ static float viewHeight = 36.0f; //按钮视图高度
     self.backView.frame = CGRectMake(0, 0, self.width, self.height);
     
     //表情按钮
-    self.emojiBtn.frame = CGRectMake(viewMargin, viewMargin, viewHeight, viewHeight);
+//    self.emojiBtn.frame = CGRectMake(viewMargin, viewMargin, viewHeight, viewHeight);
+    self.emojiBtn.frame = CGRectMake(viewMargin, viewMargin, 0, viewHeight);
     
     //输入视图
-    self.textView.frame = CGRectMake(CGRectGetMaxX(self.emojiBtn.frame) + viewMargin, viewMargin, kScreenWidth - (CGRectGetMaxX(self.emojiBtn.frame) + viewMargin) * 2, viewHeight);
+    self.textView.frame = CGRectMake(CGRectGetMaxX(self.emojiBtn.frame) + viewMargin, viewMargin, kScreenWidth - (CGRectGetMaxX(self.emojiBtn.frame) + viewMargin) * 2 - viewHeight, viewHeight);
     
     //加号按钮
-    self.moreBtn.frame = CGRectMake(CGRectGetMaxX(self.textView.frame) + viewMargin, self.height - viewMargin - viewHeight, viewHeight, viewHeight);
+    self.moreBtn.frame = CGRectMake(CGRectGetMaxX(self.textView.frame) + viewMargin, self.height - viewMargin - viewHeight + 5, viewHeight, viewHeight - 10);
     
     
 }
@@ -245,7 +246,8 @@ static float viewHeight = 36.0f; //按钮视图高度
 - (UIButton *)moreBtn {
     if (!_moreBtn) {
         _moreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_moreBtn setBackgroundImage:[UIImage imageNamed:@"moreImg"] forState:UIControlStateNormal];
+        [_moreBtn setBackgroundImage:[UIImage imageNamed:@"photo"] forState:UIControlStateNormal];
+        
         [_moreBtn addTarget:self action:@selector(moreBtn:) forControlEvents:UIControlEventTouchUpInside];
         [self.backView addSubview:_moreBtn];
     }

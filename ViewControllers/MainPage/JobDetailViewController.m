@@ -29,11 +29,15 @@
 @property (nonatomic, strong) UIButton *makePhoneCallButton;
 
 @property (nonatomic, strong) UIButton *goChatButton;
+
+@property (nonatomic, strong) UIButton *collectionButton;
 @end
 
 @implementation JobDetailViewController
 
 - (void)fetchData {
+
+    
     [[HttpHelper sharedHttpHelper] postRequestWithInterfaceName:@"index/jobDetail" parame:@{@"id":@(self.jobId)} success:^(id  _Nullable respDict, NSString * _Nullable message) {
         self.jobDetailModel = [JobDetailModel yy_modelWithJSON:respDict[@"joblist"][0]];
         [self.tableView reloadData];
@@ -51,7 +55,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"职位详情";
-    
+    self.rightButtons = @[self.collectionButton];
+    [self.requestManager postRequestWithInterfaceName:@"index/addBrowse" parame:@{@"member_id":self.appDelegate.userInfoModel.member_id,@"recruit_id":@(self.jobId)} success:^(id  _Nullable respDict, NSString * _Nullable message) {
+        
+    } fail:^(id  _Nullable error) {
+        
+    }];
     // Do any additional setup after loading the view.
     [self.tableView registerNib:[UINib nibWithNibName:@"JobInfoTableViewCell" bundle:nil] forCellReuseIdentifier:@"jobInfoCell"];
     [self.tableView registerNib:[UINib nibWithNibName:@"JobLocationTableViewCell" bundle:nil] forCellReuseIdentifier:@"locationCell"];
@@ -194,6 +203,14 @@
     }
 }
 
+- (void)collectionButtonAction:(UIButton *)sender {
+    [self.requestManager postRequestWithInterfaceName:@"index/addCollect" parame:@{@"member_id":self.appDelegate.userInfoModel.member_id,@"recruit_id":@(self.jobId)} success:^(id  _Nullable respDict, NSString * _Nullable message) {
+        [self showInfoWithMessage:@"收藏成功"];
+    } fail:^(id  _Nullable error) {
+        [self showInfoWithMessage:@"收藏失败"];
+    }];
+}
+
 
 - (UIView *)bottomView {
     if (!_bottomView) {
@@ -231,5 +248,17 @@
     }
     return _goChatButton;
 }
+
+- (UIButton *)collectionButton {
+    if (!_collectionButton) {
+        _collectionButton = [UIButton buttonWithType:(UIButtonTypeCustom)];
+        _collectionButton.frame = CGRectMake(0, 0, 40, 40);
+        [_collectionButton addTarget:self action:@selector(collectionButtonAction:) forControlEvents:(UIControlEventTouchUpInside)];
+        [_collectionButton setImage:[UIImage imageNamed:@"collectIcon"] forState:(UIControlStateNormal)];
+        _collectionButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    }
+    return _collectionButton;
+}
+
 
 @end

@@ -13,15 +13,16 @@
 
 
 @interface SetPasswordViewController ()
+@property (weak, nonatomic) IBOutlet UILabel *mobileLabel;
 @property (weak, nonatomic) IBOutlet UITextField *vCodeTextField;
-
+@property (nonatomic, copy) NSString *code;
 @end
 
 @implementation SetPasswordViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    self.mobileLabel.text = self.appDelegate.userInfoModel.mobile;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -30,23 +31,34 @@
 }
 
 - (IBAction)vCodeAction:(JKCountDownButton *)sender {
-    sender.enabled = NO;
-    //button type要 设置成custom 否则会闪动
-    [sender startCountDownWithSecond:60];
-    
-    [sender countDownChanging:^NSString *(JKCountDownButton *countDownButton,NSUInteger second) {
-        NSString *title = [NSString stringWithFormat:@"%zd秒重新发送",second];
-        return title;
-    }];
-    [sender countDownFinished:^NSString *(JKCountDownButton *countDownButton, NSUInteger second) {
-        countDownButton.enabled = YES;
-        return @"发送验证码";
-        
-    }];
-}
+    [self.requestManager postRequestWithInterfaceName:@"login/sendCode" parame:@{@"mobile":self.mobileLabel.text,@"type":@"2"} success:^(id  _Nullable respDict, NSString * _Nullable message) {
+        if ([DataCheck isValidString:[NSString stringWithFormat:@"%@", respDict[@"code"]]]) {
+            self.code = [NSString stringWithFormat:@"%@",respDict[@"code"]];
+            sender.enabled = NO;
+            //button type要 设置成custom 否则会闪动
+            [sender startCountDownWithSecond:60];
+            
+            [sender countDownChanging:^NSString *(JKCountDownButton *countDownButton,NSUInteger second) {
+                NSString *title = [NSString stringWithFormat:@"%zds后重新获取",second];
+                return title;
+            }];
+            [sender countDownFinished:^NSString *(JKCountDownButton *countDownButton, NSUInteger second) {
+                countDownButton.enabled = YES;
+                return @"获取验证码";
+                
+            }];
+        } else {
+            [self showInfoWithMessage:@"获取验证码失败"];
+        }
+    } fail:^(id  _Nullable error) {
+        [self showInfoWithMessage:error];
+    }];}
 
 - (IBAction)nextAction:(UIButton *)sender {
-    [self.navigationController pushViewController:[ChangePasswordViewController new] animated:YES];
+    if ([self.code isEqualToString:self.vCodeTextField.text]) {
+        
+        [self.navigationController pushViewController:[ChangePasswordViewController new] animated:YES];
+    }
 }
 
 /*

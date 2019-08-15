@@ -14,6 +14,7 @@
 #import "FeedBackViewController.h"
 #import "AccountSafeViewController.h"
 #import "UserInfoModel.h"
+#import "SharedRecordsViewController.h"
 
 @interface MineViewController ()
 
@@ -25,7 +26,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self showLodingWithMessage:@""];
     [self.requestManager postRequestWithInterfaceName:@"member/getUsInfo" parame:@{@"uuid":GET_UUID,@"token":GET_TOKEN} success:^(id  _Nullable respDict, NSString * _Nullable message) {
+        [self hideLoding];
         if ([DataCheck isValidDictionary:respDict]) {
             AppDelegate *appDelegate = myAppDelegate;
             appDelegate.userInfoModel = [UserInfoModel yy_modelWithJSON:respDict];
@@ -35,6 +38,7 @@
             [self showInfoWithMessage:@"获取用户信息失败"];
         }
     } fail:^(id  _Nullable error) {
+        [self hideLoding];
         [self showInfoWithMessage:error];
     }];
 }
@@ -114,7 +118,7 @@
             }
             break;
         case 2: {
-            
+            [self.navigationController pushViewController:[SharedRecordsViewController new] animated:YES];
         }
             break;
             

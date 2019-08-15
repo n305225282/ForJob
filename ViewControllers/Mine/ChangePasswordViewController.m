@@ -22,8 +22,11 @@
 }
 
 - (IBAction)finishAction:(UIButton *)sender {
-    int index = (int)[[self.navigationController viewControllers]indexOfObject:self];
-    [self.navigationController popToViewController:[self.navigationController.viewControllers objectAtIndex:(index -2)] animated:YES];
+    if ([self.passwordTextField.text isEqualToString:self.rePasswordTextField.text] && self.passwordTextField.text.length >= 6) {
+        [self updateUserInfoWithParam:@{@"key":@"pwd",@"value":self.passwordTextField.text}];
+    } else {
+        [self showInfoWithMessage:@"请输入大于6位的密码,并确认两次密码输入是否一致"];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -31,14 +34,18 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)updateUserInfoWithParam:(NSDictionary *)param {
+    NSMutableDictionary *paratems = [NSMutableDictionary dictionaryWithDictionary:param];
+    [paratems setObject:GET_TOKEN forKey:@"token"];
+    [paratems setObject:GET_UUID forKey:@"uuid"];
+    [paratems setObject:@"1" forKey:@"submit"];
+    [self.requestManager postRequestWithInterfaceName:@"member/eidtMemberInfo" parame:paratems success:^(id  _Nullable respDict, NSString * _Nullable message) {
+        [self showInfoWithMessage:message];
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    } fail:^(id  _Nullable error) {
+        [self showInfoWithMessage:error];
+    }];
 }
-*/
+
 
 @end

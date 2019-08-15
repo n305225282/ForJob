@@ -15,4 +15,8 @@
 @property (nonatomic, strong) AppDelegate *appDelegate;
 - (void)showLodingWithMessage:(NSString *)message;
 - (void)hideLoding;
+
+
+/// 导航栏右侧按钮
+@property (nonatomic, strong) NSArray<UIButton *> *rightButtons;
 @end

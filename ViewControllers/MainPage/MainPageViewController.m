@@ -30,22 +30,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"职位";
+    __weak MainPageViewController *weakSelf = self;
     
-    View *view = [[NSBundle mainBundle] loadNibNamed:@"View" owner:self options:nil].lastObject;
-    view.shareBlock = ^{
-        if ([WechatShareManager isWXAppInstalled]) {
-            [WechatShareManager shareToWechatWithWebTitle:@"蓝帝好工作" description:@"蓝帝好工作" thumbImage:[UIImage imageNamed:@"logo"] webpageUrl:@"http://www.baidu.com" type:0];
-        } else {
-            [self showInfoWithMessage:@"未检测到微信"];
-        }
-        [GKCover hide];
-    };
-    
-    [GKCover coverFrom:UIApplication.sharedApplication.keyWindow contentView:view style:(GKCoverStyleTranslucent) showStyle:(GKCoverShowStyleCenter) showAnimStyle:(GKCoverShowAnimStyleCenter) hideAnimStyle:(GKCoverHideAnimStyleCenter) notClick:NO showBlock:^{
-        
-    } hideBlock:^{
-        
-    }];
     
     [self.requestManager postRequestWithInterfaceName:@"member/getUsInfo" parame:@{@"uuid":GET_UUID,@"token":GET_TOKEN} success:^(id  _Nullable respDict, NSString * _Nullable message) {
         if ([DataCheck isValidDictionary:respDict]) {
@@ -60,7 +46,7 @@
     self.viewModel = [[MainPageViewModel alloc] init];
     self.viewModel.bindView = self.tableView;
     self.contentView = [[NSBundle mainBundle] loadNibNamed:@"MainHeaderView" owner:self options:nil].firstObject;
-    __weak MainPageViewController *weakSelf = self;
+    
     
     self.contentView.seachBlock = ^{
         PYSearchViewController *searchViewController = [PYSearchViewController searchViewControllerWithHotSearches:nil searchBarPlaceholder:@"搜索职位" didSearchBlock:^(PYSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText) {
@@ -142,6 +128,29 @@
     [self.viewModel fetchDataWithParams:@{}];
     NSString *city = [[NSUserDefaults standardUserDefaults] objectForKey:@"city"];
     [self.contentView.cityButton setTitle:city.length > 0 ? city : @"上海" forState:(UIControlStateNormal)];
+    
+    __weak MainPageViewController *weakSelf = self;
+    self.viewModel.HandleBlock = ^(NSDictionary *modelDic) {
+        View *view = [[NSBundle mainBundle] loadNibNamed:@"View" owner:weakSelf options:nil].lastObject;
+        view.shareBlock = ^{
+            if ([WechatShareManager isWXAppInstalled]) {
+                [weakSelf.requestManager postRequestWithInterfaceName:@"index/addShare" parame:@{@"member_id":weakSelf.appDelegate.userInfoModel.member_id} success:^(id  _Nullable respDict, NSString * _Nullable message) {
+                    [WechatShareManager shareToWechatWithWebTitle:@"蓝帝好工作" description:modelDic[@"content"] thumbImage:[UIImage imageNamed:@"logo"] webpageUrl:modelDic[@"link"] type:0];
+                } fail:^(id  _Nullable error) {
+                    
+                }];
+            } else {
+                [weakSelf showInfoWithMessage:@"未检测到微信"];
+            }
+            [GKCover hide];
+        };
+        
+        [GKCover coverFrom:UIApplication.sharedApplication.keyWindow contentView:view style:(GKCoverStyleTranslucent) showStyle:(GKCoverShowStyleCenter) showAnimStyle:(GKCoverShowAnimStyleCenter) hideAnimStyle:(GKCoverHideAnimStyleCenter) notClick:NO showBlock:^{
+            
+        } hideBlock:^{
+            
+        }];
+    };
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {

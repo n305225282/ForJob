@@ -20,7 +20,7 @@
     if (self) {
         UIImageView *imageView = [[UIImageView alloc] init];
         imageView.frame = CGRectMake(30, 20, 60, 60);
-        imageView.image = [UIImage imageNamed:@"photoImg"];
+        imageView.image = [UIImage imageNamed:@"photo"];
         [self addSubview:imageView];
         
         UILabel *label = [UILabel new];

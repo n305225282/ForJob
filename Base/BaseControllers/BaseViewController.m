@@ -68,4 +68,15 @@
     return _appDelegate;
 }
 
+- (void)setRightButtons:(NSArray<UIButton *> *)rightButtons {
+    _rightButtons = rightButtons;
+    NSMutableArray *tempArray = [NSMutableArray array];
+    for (int i = 0; i < rightButtons.count; i++) {
+        [tempArray addObject:[[UIBarButtonItem alloc] initWithCustomView:rightButtons[i]]];
+    }
+    if (tempArray.count > 0) {
+        self.navigationItem.rightBarButtonItems = tempArray;
+    }
+}
+
 @end

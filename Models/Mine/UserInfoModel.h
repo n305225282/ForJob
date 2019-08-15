@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *header_src;
 @property (nonatomic, copy) NSString *nickname;
 @property (nonatomic, copy) NSString *member_id;
+@property (nonatomic, copy) NSString *mobile;
 @end
 
 NS_ASSUME_NONNULL_END
