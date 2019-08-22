@@ -18,6 +18,7 @@
 #import "SearchResultViewController.h"
 #import <GKCover/GKCover.h>
 #import "View.h"
+#import "LoginAndRegistViewController.h"
 #import "WechatShareManager.h"
 
 @interface MainPageViewController ()
@@ -32,17 +33,6 @@
     self.title = @"职位";
     __weak MainPageViewController *weakSelf = self;
     
-    
-    [self.requestManager postRequestWithInterfaceName:@"member/getUsInfo" parame:@{@"uuid":GET_UUID,@"token":GET_TOKEN} success:^(id  _Nullable respDict, NSString * _Nullable message) {
-        if ([DataCheck isValidDictionary:respDict]) {
-            self.appDelegate.userInfoModel = [UserInfoModel yy_modelWithJSON:respDict];
-        } else {
-            [self showInfoWithMessage:@"获取用户信息失败"];
-        }
-    } fail:^(id  _Nullable error) {
-        [self showInfoWithMessage:error];
-    }];
-    
     self.viewModel = [[MainPageViewModel alloc] init];
     self.viewModel.bindView = self.tableView;
     self.contentView = [[NSBundle mainBundle] loadNibNamed:@"MainHeaderView" owner:self options:nil].firstObject;
@@ -54,7 +44,7 @@
                 SearchResultViewController *searchResultVC = [SearchResultViewController new];
                 searchResultVC.keyWords = searchText;
 //                self.keywords = searchText;
-                [self.navigationController pushViewController:searchResultVC animated:YES];
+                [weakSelf.navigationController pushViewController:searchResultVC animated:YES];
             }
             [searchViewController dismissViewControllerAnimated:YES completion:nil];
             
@@ -63,7 +53,7 @@
         [searchViewController setSearchHistoryStyle:(PYSearchHistoryStyleBorderTag)];
         // 3. present the searchViewController
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchViewController];
-        [self presentViewController:nav  animated:NO completion:nil];
+        [weakSelf presentViewController:nav  animated:NO completion:nil];
     };
     
     
@@ -124,10 +114,37 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.hidden = YES;
+    
+    
+    [self.requestManager postRequestWithInterfaceName:@"member/getUsInfo" parame:@{@"uuid":GET_UUID,@"token":GET_TOKEN} success:^(id  _Nullable respDict, NSString * _Nullable message) {
+        if ([DataCheck isValidDictionary:respDict]) {
+            self.appDelegate.userInfoModel = [UserInfoModel yy_modelWithJSON:respDict];
+            if (self.appDelegate.userInfoModel.member_id == nil || self.appDelegate.userInfoModel.member_id.length < 1) {
+                
+                UINavigationController *navC = [[UINavigationController alloc] initWithRootViewController:[LoginAndRegistViewController new]];
+                UIApplication.sharedApplication.keyWindow.rootViewController = navC;
+                
+            }
+        } else {
+            [self showInfoWithMessage:@"获取用户信息失败"];
+        }
+    } fail:^(id  _Nullable error) {
+        [self showInfoWithMessage:error];
+    }];
+    
+    
+    
     [self setStatusBarBackgroundColor:self.tableView.tableHeaderView.backgroundColor];
-    [self.viewModel fetchDataWithParams:@{}];
+    NSNumber *aid = [[NSUserDefaults standardUserDefaults] objectForKey:@"cityId"];
+    NSDictionary *param = @{};
+    if (aid) {
+        param = @{@"level_id":aid};
+    } else {
+        param = @{@"level_id":@(878)};
+    }
+    [self.viewModel fetchDataWithParams:param];
     NSString *city = [[NSUserDefaults standardUserDefaults] objectForKey:@"city"];
-    [self.contentView.cityButton setTitle:city.length > 0 ? city : @"上海" forState:(UIControlStateNormal)];
+    [self.contentView.cityButton setTitle:city.length > 0 ? city : @"上海市" forState:(UIControlStateNormal)];
     
     __weak MainPageViewController *weakSelf = self;
     self.viewModel.HandleBlock = ^(NSDictionary *modelDic) {
@@ -145,7 +162,7 @@
             [GKCover hide];
         };
         
-        [GKCover coverFrom:UIApplication.sharedApplication.keyWindow contentView:view style:(GKCoverStyleTranslucent) showStyle:(GKCoverShowStyleCenter) showAnimStyle:(GKCoverShowAnimStyleCenter) hideAnimStyle:(GKCoverHideAnimStyleCenter) notClick:NO showBlock:^{
+        [GKCover coverFrom:weakSelf.view contentView:view style:(GKCoverStyleTranslucent) showStyle:(GKCoverShowStyleCenter) showAnimStyle:(GKCoverShowAnimStyleCenter) hideAnimStyle:(GKCoverHideAnimStyleCenter) notClick:NO showBlock:^{
             
         } hideBlock:^{
             

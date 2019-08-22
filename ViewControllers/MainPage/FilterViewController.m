@@ -8,7 +8,7 @@
 
 #import "FilterViewController.h"
 #import "CFMacro.h"
-#import "CFMultistageDropdownMenuView.h"
+#import <CFDropDownMenuView/CFDropDownMenuView.h>
 #import "MainPageTableViewCell.h"
 #import "MainPageModel.h"
 #import "JobDetailViewController.h"
@@ -17,15 +17,58 @@
 @interface FilterViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray *dataSource;
-@property (nonatomic, strong) CFMultistageDropdownMenuView *multistageDropdownMenuView;
+@property (nonatomic, strong) CFDropDownMenuView *multistageDropdownMenuView;
+@property (nonatomic, strong) NSArray *classifyDataArray;
+@property (nonatomic, strong) NSMutableArray *classfyTitleArray;
+@property (nonatomic, strong) NSArray *salaryArray;
+@property (nonatomic, strong) NSArray *lastArray;
+
+@property (nonatomic, strong) NSNumber *classifyNumber;
+@property (nonatomic, assign) NSInteger salarySelectIndex;
+@property (nonatomic, assign) NSInteger lastSelectIndex;
 @end
 
 @implementation FilterViewController
 
-- (void)fetchData {
-    [[HttpHelper sharedHttpHelper] postRequestWithInterfaceName:@"index/getCategoryPost" parame:@{@"id":@(self.filterId)} success:^(id  _Nullable respDict, NSString * _Nullable message) {
+- (void)fetchDataWithParam:(NSDictionary *)params {
+    NSMutableDictionary *mParams = [NSMutableDictionary dictionaryWithDictionary:params];
+    [mParams setObject:@(self.filterId) forKey:@"id"];
+    NSNumber *aid = [[NSUserDefaults standardUserDefaults] objectForKey:@"cityId"];
+    if (aid) {
+        [mParams setObject:aid forKey:@"level_id"];
+    } else {
+        [mParams setObject:@(878) forKey:@"level_id"];
+    }
+    [[HttpHelper sharedHttpHelper] postRequestWithInterfaceName:@"index/getCategoryPost" parame:mParams success:^(id  _Nullable respDict, NSString * _Nullable message) {
         self.dataSource = [NSArray yy_modelArrayWithClass:[MainPageModel class] json:respDict[@"joblist"]];
         [self.tableView reloadData];
+    } fail:^(id  _Nullable error) {
+        
+    }];
+}
+
+- (void)fetchtClassify {
+    [self showLodingWithMessage:@""];
+    [self.requestManager postRequestWithInterfaceName:@"index/postRange" parame:@{} success:^(id  _Nullable respDict, NSString * _Nullable message) {
+        [self hideLoding];
+        NSLog(@"%@",respDict);
+        if (respDict) {
+            self.classifyDataArray = respDict;
+            if ([DataCheck isValidArray:self.classifyDataArray]) {
+                self.classfyTitleArray = [NSMutableArray array];
+                for (int i = 0; i < self.classifyDataArray.count; i++) {
+                    NSDictionary *dict = self.classifyDataArray[i];
+                    [self.classfyTitleArray addObject:dict[@"post_name"]];
+                }
+                self.multistageDropdownMenuView.dataSourceArr = @[
+                                                                  self.classfyTitleArray,
+                                                                  self.salaryArray,
+                                                                  self.lastArray,
+                                                                  ].mutableCopy;
+                self.multistageDropdownMenuView.defaulTitleArray = @[@"行业分类",@"薪酬",@"排序"];
+            }
+            [self fetchDataWithParam:@{}];
+        }
     } fail:^(id  _Nullable error) {
         
     }];
@@ -34,13 +77,55 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self fetchData];
+    [self fetchDataWithParam:@{}];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // 配置CFDropDownMenuView
+    [self fetchtClassify];
+    self.multistageDropdownMenuView = [[CFDropDownMenuView alloc] initWithFrame:CGRectMake(0, StatusBarAndNavigationBarHeight, CFScreenWidth, 44)];
     [self.view addSubview:self.multistageDropdownMenuView];
+    // 下拉列表 起始y
+    self.multistageDropdownMenuView.startY = CGRectGetMaxY(self.multistageDropdownMenuView.frame);
+    __weak typeof(self) weakSelf = self;
+    self.multistageDropdownMenuView.chooseConditionBlock = ^(NSString *title, NSArray *titleArr,NSUInteger index) {
+        NSUInteger selectIndex = -1;
+        NSInteger titleIndex = -1;
+        if ([weakSelf.classfyTitleArray containsObject:title]) {
+            titleIndex = 0;
+            selectIndex = [weakSelf.classfyTitleArray indexOfObject:title];
+        } else if ([weakSelf.salaryArray containsObject:title]) {
+            titleIndex = 1;
+            selectIndex = [weakSelf.salaryArray indexOfObject:title];
+        } else {
+            titleIndex = 2;
+            selectIndex = [weakSelf.lastArray indexOfObject:title];
+        }
+        NSDictionary *param = @{};
+        if (titleIndex == 0) {
+            NSNumber *id_field = weakSelf.classifyDataArray[selectIndex][@"idField"];
+            weakSelf.classifyNumber = id_field;
+            param = @{@"post_type":weakSelf.classifyNumber,@"wage":@(weakSelf.salarySelectIndex),@"desc":@(weakSelf.lastSelectIndex)};
+            NSLog(@"哈哈%@",id_field);
+        } else if (titleIndex == 1) {
+            NSLog(@"嗯嗯嗯呃%ld",selectIndex);
+            weakSelf.salarySelectIndex = selectIndex;
+            if (weakSelf.classifyNumber) {
+                param = @{@"post_type":weakSelf.classifyNumber,@"wage":@(weakSelf.salarySelectIndex),@"desc":@(weakSelf.lastSelectIndex)};
+            } else {
+                param = @{@"wage":@(weakSelf.salarySelectIndex),@"desc":@(weakSelf.lastSelectIndex)};
+            }
+        } else if (titleIndex == 2) {
+            weakSelf.lastSelectIndex = selectIndex;
+            if (weakSelf.classifyNumber) {
+                param = @{@"post_type":weakSelf.classifyNumber,@"wage":@(weakSelf.salarySelectIndex),@"desc":@(weakSelf.lastSelectIndex)};
+            } else {
+                param = @{@"wage":@(weakSelf.salarySelectIndex),@"desc":@(weakSelf.lastSelectIndex)};
+            }
+        }
+        [weakSelf fetchDataWithParam:param];
+    };
+    
     
     UIView *sepView = [UIView new];
     sepView.backgroundColor = [UIColor groupTableViewBackgroundColor];
@@ -81,150 +166,22 @@
     [self.navigationController pushViewController:jobDetailVC animated:YES];
 }
 
-
-
-
-
-/* 配置CFDropDownMenuView */
-- (CFMultistageDropdownMenuView *)multistageDropdownMenuView
-{
-    // DEMO
-    _multistageDropdownMenuView = [[CFMultistageDropdownMenuView alloc] initWithFrame:CGRectMake(0, StatusBarAndNavigationBarHeight, CFScreenWidth, 44)];
-    
-    _multistageDropdownMenuView.defaulTitleArray = [NSArray arrayWithObjects:@"行业分类",@"金额", @"排序", nil];
-    
-    // 注:  数据源一般由网络请求
-    // 格式参照如下 - 一般后台返回的格式如此
-    NSArray *leftArr = @[
-                         // 二级菜单 的 一级菜单
-                         @[@"全部分类", @"前端", @"后台", @"设计"],
-                         // 一级菜单
-                         @[],
-                         // 一级菜单
-                         @[]
-                         ];
-    NSArray *rightArr = @[
-                          // 对应dataSourceLeftArray
-                          @[
-                              // 二级菜单 的 二级菜单
-                              // 全部分类
-                              @[@"全部"],
-                              // 特色餐饮
-                              @[@"iOS",@"Android",@"web"],
-                              // 服装鞋包
-                              @[@"Java", @"PHP"],
-                              // 美容养生
-                              @[@"UI设计师", @"美工"]
-                              ],
-                          @[
-                              // 一级菜单
-                              // 金额
-                              @[@"全部", @"一万以下", @"1-5万", @"5-10万", @"10-15万", @"15-20万", @"20万以上"]
-                              ],
-                          @[
-                              // 一级菜单
-                              // 排序
-                              @[@"全部", @"最新发布"]
-                              ]
-                          
-                          ];
-    
-    [_multistageDropdownMenuView setupDataSourceLeftArray:leftArr.mutableCopy rightArray:rightArr.mutableCopy];
-    
-    _multistageDropdownMenuView.delegate = self;
-    
-    // 下拉列表 起始y
-    _multistageDropdownMenuView.startY = CGRectGetMaxY(_multistageDropdownMenuView.frame);
-    
-    //    _multistageDropdownMenuView.maxRowCount = 3;
-    _multistageDropdownMenuView.stateConfigDict = @{
-                                                    //                                         @"selected" : @[[UIColor purpleColor], @"测试紫箭头"],
-                                                    //                                         @"normal" : @[[UIColor redColor], @"测试红箭头"]
-                                                    };
-    
-    
-    
-    
-    return _multistageDropdownMenuView;
-    
-}
-
-#pragma mark - CFMultistageDropdownMenuViewDelegate
-- (void)multistageDropdownMenuView:(CFMultistageDropdownMenuView *)multistageDropdownMenuView selecteTitleButtonIndex:(NSInteger)titleButtonIndex conditionLeftIndex:(NSInteger)leftIndex conditionRightIndex:(NSInteger)rightIndex
-{
-    
-    
-    NSString *str = [NSString stringWithFormat:@"(都是从0开始)\n 当前选中是 第%zd个title按钮, 一级条件索引是%zd,  二级条件索引是%zd",titleButtonIndex, leftIndex, rightIndex];
-    
-    NSString *titleStr = [multistageDropdownMenuView.defaulTitleArray objectAtIndex:titleButtonIndex];
-    NSArray *leftArr = [multistageDropdownMenuView.dataSourceLeftArray objectAtIndex:titleButtonIndex];
-    NSArray *rightArr = [multistageDropdownMenuView.dataSourceRightArray objectAtIndex:titleButtonIndex];
-    NSString *leftStr = @"";
-    NSString *rightStr = @"";
-    NSString *str2 = @"";
-    if (leftArr.count>0) { // 二级菜单
-        leftStr = [leftArr objectAtIndex:leftIndex];
-        NSArray *arr = [rightArr objectAtIndex:leftIndex];
-        rightStr = [arr objectAtIndex:rightIndex];
-        str2 = [NSString stringWithFormat:@"当前选中的是 \"%@\" 分类下的 \"%@\"-\"%@\"", titleStr, leftStr, rightStr];
-    } else {
-        rightStr = [rightArr[0] objectAtIndex:rightIndex];
-        str2 = [NSString stringWithFormat:@"当前选中的是 \"%@\" 分类下的 \"%@\"", titleStr, rightStr];
-    }
-    
-    NSMutableString *mStr22 = [NSMutableString stringWithFormat:@" "];
-    NSArray *btnArr = multistageDropdownMenuView.titleButtonArray;
-    for (UIButton *btn in btnArr) {
-        [mStr22 appendString:[NSString stringWithFormat:@"\"%@\"", btn.titleLabel.text]];
-        [mStr22 appendString:@" "];
-    }
-    NSString *str22 = [NSString stringWithFormat:@"当前展示的所有条件是:\n (%@)", mStr22];
-    
-    
-//    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"注: 当下拉菜单选项为一级菜单时, 一级条件索引肯定是0" message:str preferredStyle:UIAlertControllerStyleAlert];
-//    [self presentViewController:alertController animated:NO completion:^{
-//        UIAlertAction *alertAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//
-//            UIAlertController *alertController2 = [UIAlertController alertControllerWithTitle:str22 message:str2 preferredStyle:UIAlertControllerStyleAlert];
-//            [self presentViewController:alertController2 animated:NO completion:^{
-//                UIAlertAction *alertAction2 = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//
-//                }];
-//                [alertController2 addAction:alertAction2];
-//            }];
-//
-//        }];
-//        [alertController addAction:alertAction];
-//    }];
-    
-    
-}
-
-- (void)multistageDropdownMenuView:(CFMultistageDropdownMenuView *)multistageDropdownMenuView selectTitleButtonWithCurrentTitle:(NSString *)currentTitle currentTitleArray:(NSArray *)currentTitleArray
-{
-    NSMutableString *mStr = [NSMutableString stringWithFormat:@" "];
-    
-    for (NSString *str in currentTitleArray) {
-        [mStr appendString:[NSString stringWithFormat:@"\"%@\"", str]];
-        [mStr appendString:@" "];
-    }
-    NSString *str = [NSString stringWithFormat:@"当前选中的是 \"%@\" \n 当前展示的所有条件是:\n (%@)",currentTitle, mStr];
-    
-    
-//    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"第二个代理方法" message:str preferredStyle:UIAlertControllerStyleAlert];
-//    [self presentViewController:alertController animated:NO completion:^{
-//        UIAlertAction *alertAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//            
-//            
-//        }];
-//        [alertController addAction:alertAction];
-//    }];
-}
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
+- (NSArray *)salaryArray {
+    if (!_salaryArray) {
+        _salaryArray = @[@"全部",@"3K以下",@"3-5K",@"5-10K",@"10K以上"];
+    }
+    return _salaryArray;
+}
 
+- (NSArray *)lastArray {
+    if (!_lastArray) {
+        _lastArray = @[@"最新",@"推荐"];
+    }
+    return _lastArray;
+}
 @end

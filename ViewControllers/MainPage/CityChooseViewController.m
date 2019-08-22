@@ -154,6 +154,8 @@
         NSLog(@"右边点击了:%ld",indexPath.row);
         self.selectAid = self.rightDataSourceArray[indexPath.row][@"aid"];
         [[NSUserDefaults standardUserDefaults] setObject:self.rightDataSourceArray[indexPath.row][@"name"] forKey:@"city"];
+        NSNumber *adi = self.rightDataSourceArray[indexPath.row][@"aid"];
+        [[NSUserDefaults standardUserDefaults] setObject:adi forKey:@"cityId"];
         [tableView reloadData];
     }
 }

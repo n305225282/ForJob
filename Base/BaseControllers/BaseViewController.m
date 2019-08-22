@@ -10,6 +10,7 @@
 #import "MainPageViewController.h"
 #import "MessageTableViewController.h"
 #import "MineViewController.h"
+#import "LoginAndRegistViewController.h"
 
 @interface BaseViewController ()
 
@@ -19,6 +20,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
     NSLog(@"%@",[self class]);
     if ([self isKindOfClass:[MainPageViewController class]] || [self isKindOfClass:[MessageTableViewController class]] || [self isKindOfClass:[MineViewController class]] ) {
         self.tabBarController.tabBar.hidden = NO;
