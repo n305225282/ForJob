@@ -115,23 +115,23 @@
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.hidden = YES;
     
-    
-    [self.requestManager postRequestWithInterfaceName:@"member/getUsInfo" parame:@{@"uuid":GET_UUID,@"token":GET_TOKEN} success:^(id  _Nullable respDict, NSString * _Nullable message) {
-        if ([DataCheck isValidDictionary:respDict]) {
-            self.appDelegate.userInfoModel = [UserInfoModel yy_modelWithJSON:respDict];
-            if (self.appDelegate.userInfoModel.member_id == nil || self.appDelegate.userInfoModel.member_id.length < 1) {
-                
-                UINavigationController *navC = [[UINavigationController alloc] initWithRootViewController:[LoginAndRegistViewController new]];
-                UIApplication.sharedApplication.keyWindow.rootViewController = navC;
-                
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"token"] && [[NSUserDefaults standardUserDefaults] objectForKey:@"uuid"]) {
+        [self.requestManager postRequestWithInterfaceName:@"member/getUsInfo" parame:@{@"uuid":GET_UUID,@"token":GET_TOKEN} success:^(id  _Nullable respDict, NSString * _Nullable message) {
+            if ([DataCheck isValidDictionary:respDict]) {
+                self.appDelegate.userInfoModel = [UserInfoModel yy_modelWithJSON:respDict];
+                if (self.appDelegate.userInfoModel.member_id == nil || self.appDelegate.userInfoModel.member_id.length < 1) {
+                    
+                    UINavigationController *navC = [[UINavigationController alloc] initWithRootViewController:[LoginAndRegistViewController new]];
+                    UIApplication.sharedApplication.keyWindow.rootViewController = navC;
+                    
+                }
+            } else {
+                [self showInfoWithMessage:@"获取用户信息失败"];
             }
-        } else {
-            [self showInfoWithMessage:@"获取用户信息失败"];
-        }
-    } fail:^(id  _Nullable error) {
-        [self showInfoWithMessage:error];
-    }];
-    
+        } fail:^(id  _Nullable error) {
+            [self showInfoWithMessage:error];
+        }];
+    }
     
     
     [self setStatusBarBackgroundColor:self.tableView.tableHeaderView.backgroundColor];
@@ -204,12 +204,16 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    self.hidesBottomBarWhenPushed = YES;
-    MainPageModel *model = self.viewModel.dataSource[indexPath.row];
-    JobDetailViewController *jobDetailVC = [JobDetailViewController new];
-    jobDetailVC.jobId = model.idField;
-    [self.navigationController pushViewController:jobDetailVC animated:YES];
-    self.hidesBottomBarWhenPushed = NO;
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"token"] && [[NSUserDefaults standardUserDefaults] objectForKey:@"uuid"]) {
+        self.hidesBottomBarWhenPushed = YES;
+        MainPageModel *model = self.viewModel.dataSource[indexPath.row];
+        JobDetailViewController *jobDetailVC = [JobDetailViewController new];
+        jobDetailVC.jobId = model.idField;
+        [self.navigationController pushViewController:jobDetailVC animated:YES];
+        self.hidesBottomBarWhenPushed = NO;
+    } else {
+        [self.navigationController pushViewController:[LoginAndRegistViewController new] animated:YES];
+    }
 }
 
 

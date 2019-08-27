@@ -12,7 +12,7 @@
 #import "MineViewController.h"
 #import "LoginAndRegistViewController.h"
 
-@interface BaseViewController ()
+@interface BaseViewController () <UITabBarControllerDelegate>
 
 @end
 
@@ -27,7 +27,7 @@
     } else {
         self.tabBarController.tabBar.hidden = YES;
     }
-
+    self.tabBarController.delegate = self;
 }
 
 - (void)viewDidLoad {
@@ -38,6 +38,25 @@
     barItem.tintColor = [UIColor blackColor];
     self.navigationItem.backBarButtonItem = barItem;
     // Do any additional setup after loading the view.
+}
+
+- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController {
+    if ([viewController isKindOfClass:[UINavigationController class]]) {
+        UINavigationController *navVC = (UINavigationController *)viewController;
+        for (UIViewController *vc in navVC.viewControllers) {
+            if ([vc isKindOfClass:[MessageTableViewController class]] || [vc isKindOfClass:[MineViewController class]]) {
+                if ([[NSUserDefaults standardUserDefaults] objectForKey:@"token"] && [[NSUserDefaults standardUserDefaults] objectForKey:@"uuid"]) {
+                    
+                    return TRUE;
+                } else {
+//                    UINavigationController *navC = [[UINavigationController alloc] initWithRootViewController:[LoginAndRegistViewController new]];
+                    [self.navigationController pushViewController:[LoginAndRegistViewController new] animated:YES];
+                    return NO;
+                }
+            }
+        }
+    }
+    return TRUE;
 }
 
 - (void)showLodingWithMessage:(NSString *)message {

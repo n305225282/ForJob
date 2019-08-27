@@ -12,6 +12,7 @@
 #import "MainPageTableViewCell.h"
 #import "MainPageModel.h"
 #import "JobDetailViewController.h"
+#import "LoginAndRegistViewController.h"
 
 
 @interface FilterViewController ()<UITableViewDelegate,UITableViewDataSource>
@@ -160,10 +161,14 @@
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    MainPageModel *model = self.dataSource[indexPath.row];
-    JobDetailViewController *jobDetailVC = [JobDetailViewController new];
-    jobDetailVC.jobId = model.idField;
-    [self.navigationController pushViewController:jobDetailVC animated:YES];
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"token"] && [[NSUserDefaults standardUserDefaults] objectForKey:@"uuid"]) {
+        MainPageModel *model = self.dataSource[indexPath.row];
+        JobDetailViewController *jobDetailVC = [JobDetailViewController new];
+        jobDetailVC.jobId = model.idField;
+        [self.navigationController pushViewController:jobDetailVC animated:YES];
+    } else {
+        [self.navigationController pushViewController:[LoginAndRegistViewController new] animated:YES];
+    }
 }
 
 - (void)didReceiveMemoryWarning {

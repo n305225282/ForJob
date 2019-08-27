@@ -51,7 +51,8 @@
             AppDelegate *appDelegate = myAppDelegate;
             appDelegate.userInfoModel = [UserInfoModel yy_modelWithJSON:respDict];
             [[WebSocketManager shared] connectServer];
-            [UIApplication sharedApplication].keyWindow.rootViewController = [TabbarViewController new];
+//            [UIApplication sharedApplication].keyWindow.rootViewController = [TabbarViewController new];
+            [self.navigationController popToRootViewControllerAnimated:YES];
         }
     } fail:^(id  _Nullable error) {
         [self showInfoWithMessage:error];

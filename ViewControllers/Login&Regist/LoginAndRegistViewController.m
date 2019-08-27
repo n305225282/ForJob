@@ -17,6 +17,9 @@
 
 @implementation LoginAndRegistViewController
 
+- (IBAction)backAction:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -25,7 +28,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBar.hidden = YES;
+//    self.navigationController.navigationBar.hidden = YES;
     self.registButton.layer.borderColor = [UIColor.blueColor colorWithAlphaComponent:0.6].CGColor;
     self.registButton.layer.borderWidth = .5f;
 }

@@ -11,6 +11,7 @@
 #import "JobDetailViewController.h"
 #import "MainPageModel.h"
 #import "MainPageViewModel.h"
+#import "LoginAndRegistViewController.h"
 
 
 @interface SearchResultViewController ()
@@ -48,12 +49,16 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    self.hidesBottomBarWhenPushed = YES;
-    MainPageModel *model = self.mainPageVM.dataSource[indexPath.row];
-    JobDetailViewController *jobDetailVC = [JobDetailViewController new];
-    jobDetailVC.jobId = model.idField;
-    [self.navigationController pushViewController:jobDetailVC animated:YES];
-    self.hidesBottomBarWhenPushed = NO;
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"token"] && [[NSUserDefaults standardUserDefaults] objectForKey:@"uuid"]) {
+        self.hidesBottomBarWhenPushed = YES;
+        MainPageModel *model = self.mainPageVM.dataSource[indexPath.row];
+        JobDetailViewController *jobDetailVC = [JobDetailViewController new];
+        jobDetailVC.jobId = model.idField;
+        [self.navigationController pushViewController:jobDetailVC animated:YES];
+        self.hidesBottomBarWhenPushed = NO;
+    } else {
+        [self.navigationController pushViewController:[LoginAndRegistViewController new] animated:YES];
+    }
 }
 
 

@@ -24,13 +24,13 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"token"] && [[NSUserDefaults standardUserDefaults] objectForKey:@"uuid"]) {
+//    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"token"] && [[NSUserDefaults standardUserDefaults] objectForKey:@"uuid"]) {
         [[WebSocketManager shared] connectServer];
         self.window.rootViewController = [TabbarViewController new];
-    } else {
-        UINavigationController *navC = [[UINavigationController alloc] initWithRootViewController:[LoginAndRegistViewController new]];
-        self.window.rootViewController = navC;
-    }
+//    } else {
+//        UINavigationController *navC = [[UINavigationController alloc] initWithRootViewController:[LoginAndRegistViewController new]];
+//        self.window.rootViewController = navC;
+//    }
     [self.window makeKeyAndVisible];
     
     IQKeyboardManager *manager = [IQKeyboardManager sharedManager];
